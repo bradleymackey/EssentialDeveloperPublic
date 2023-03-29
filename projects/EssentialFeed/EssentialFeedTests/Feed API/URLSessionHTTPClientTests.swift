@@ -32,9 +32,12 @@ class URLSessionHTTPClientTests: XCTestCase {
             exp.fulfill()
         }
         
-        sut.get(from: url) { _ in }
+        // running a test here but not checking when it is finished will result in a data race
+        // (we could also just add the expectation in here)
+        let requestExp = expectation(description: "Wait for request to finish")
+        sut.get(from: url) { _ in requestExp.fulfill() }
         
-        wait(for: [exp], timeout: 1.0)
+        wait(for: [exp, requestExp], timeout: 1.0)
     }
     
     func test_getFromURL_failsOnRequestError() {
