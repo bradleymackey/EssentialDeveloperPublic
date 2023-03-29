@@ -12,4 +12,21 @@ public struct FeedItem: Equatable {
     public let description: String?
     public let location: String?
     public let imageURL: URL
+    
+    // Other modules may want to create this, so we need to create a public initializer.
+    public init(id: UUID, description: String?, location: String?, imageURL: URL) {
+        self.id = id
+        self.description = description
+        self.location = location
+        self.imageURL = imageURL
+    }
+}
+
+extension FeedItem: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case description
+        case location
+        case imageURL = "image"
+    }
 }
