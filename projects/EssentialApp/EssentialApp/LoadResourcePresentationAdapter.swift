@@ -13,6 +13,7 @@ import EssentialFeediOS
 final class LoadResourcePresentationAdapter<Resource, View: ResourceView> {
     private let loader: () -> AnyPublisher<Resource, Error>
     private var cancellable: AnyCancellable?
+    private var isLoading = false
     /// This is only optional to break a circular dependency.
     /// It's fine though, because this is at the composition layer.
     /// We're not leaking this composition detail into the adapters.
@@ -25,14 +26,21 @@ final class LoadResourcePresentationAdapter<Resource, View: ResourceView> {
     }
     
     func loadResource() {
+        guard !isLoading else { return }
         presenter?.didStartLoading()
-        cancellable = loader().sink { [weak self] completion in
+        isLoading = true
+        cancellable = loader()
+            .handleEvents(receiveCancel: { [weak self] in
+                self?.isLoading = false
+            })
+            .sink { [weak self] completion in
             switch completion {
             case .finished:
                 break
             case .failure(let error):
                 self?.presenter?.didFinishLoading(with: error)
             }
+            self?.isLoading = false
         } receiveValue: { [weak self] feed in
             self?.presenter?.didFinishLoading(with: feed)
         }
