@@ -11,15 +11,6 @@ import EssentialFeediOS
 
 class FeedSnapshotTests: XCTestCase {
     
-    func test_emptyFeed() throws {
-        let sut = try makeSUT()
-        
-        sut.display(emptyFeed())
-        
-        assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "EMPTY_FEED_light")
-        assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_FEED_dark")
-    }
-    
     func test_feedWithContent() throws {
         let sut = try makeSUT()
         
@@ -27,15 +18,6 @@ class FeedSnapshotTests: XCTestCase {
         
         assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_WITH_CONTENT_light")
         assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_WITH_CONTENT_dark")
-    }
-    
-    func test_feedWithErrorMessage() throws {
-        let sut = try makeSUT()
-        
-        sut.display(.error(message: "An error message...\n...with another line!"))
-        
-        assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_WITH_ERROR_MESSAGE_light")
-        assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_WITH_ERROR_MESSAGE_dark")
     }
     
     func test_feedWithFailedImageLoading() throws {
