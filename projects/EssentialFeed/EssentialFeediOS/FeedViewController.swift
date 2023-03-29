@@ -70,10 +70,12 @@ final public class FeedViewController: UITableViewController {
     public override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard let cell = cell as? FeedImageCell else { fatalError("Unknown cell type") }
         cell.feedImageContainer.startShimmering()
+        cell.feedImageRetryButton.isHidden = true
         let cellModel = tableModel[indexPath.row]
         tasks[indexPath] = imageLoader?.loadImageData(from: cellModel.url) { [weak cell] result in
             let data = try? result.get()
             cell?.feedImageView.image = data.map(UIImage.init) ?? nil
+            cell?.feedImageRetryButton.isHidden = (data != nil)
             cell?.feedImageContainer.stopShimmering()
         }
     }
