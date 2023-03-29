@@ -141,19 +141,16 @@ class FeedUIIntegrationTests: XCTestCase {
         
         sut.loadViewIfNeeded()
         
-        // 0 Elements
-        assertThat(sut, isRendering: [])
+        loader.completeFeedLoading(with: [image0, image1])
+        assertThat(sut, isRendering: [image0, image1])
         
-        // 1 Element
-        let oneImage = [image0]
-        loader.completeFeedLoading(with: oneImage)
-        assertThat(sut, isRendering: oneImage)
+        sut.simulateLoadMoreFeedAction()
+        loader.completeLoadMore(with: [image0, image1, image2, image3])
+        assertThat(sut, isRendering: [image0, image1, image2, image3])
         
-        // Many Elements
         sut.simulateUserInitiatedReload()
-        let manyImages = [image0, image1, image2, image3]
-        loader.completeFeedLoading(with: manyImages, at: 1)
-        assertThat(sut, isRendering: manyImages)
+        loader.completeFeedLoading(with: [image0, image1], at: 1)
+        assertThat(sut, isRendering: [image0, image1])
     }
     
     func test_loadFeedCompletion_rendersSuccessfullyLoadedEmptyFeedAfterNonEmptyFeed() {
@@ -165,12 +162,13 @@ class FeedUIIntegrationTests: XCTestCase {
         sut.loadViewIfNeeded()
         assertThat(sut, isRendering: [])
         
-        // Initial Load
-        let oneImage = [image0, image1]
-        loader.completeFeedLoading(with: oneImage)
-        assertThat(sut, isRendering: oneImage)
+        loader.completeFeedLoading(with: [image0])
+        assertThat(sut, isRendering: [image0])
         
-        // Second Load
+        sut.simulateLoadMoreFeedAction()
+        loader.completeLoadMore(with: [image0, image1], at: 0)
+        assertThat(sut, isRendering: [image0, image1])
+        
         sut.simulateUserInitiatedReload()
         loader.completeFeedLoading(with: [], at: 1)
         assertThat(sut, isRendering: [])
@@ -187,6 +185,10 @@ class FeedUIIntegrationTests: XCTestCase {
         sut.simulateUserInitiatedReload()
         loader.completeFeedLoadingWithError(at: 1)
         assertThat(sut, isRendering: [image0])
+        
+        sut.simulateLoadMoreFeedAction()
+        loader.completeLoadMoreWithError(at: 0)
+        assertThat(sut, isRendering: [image0])
     }
     
     func test_loadFeedCompletion_dispatchesFromBackgroundThreadToMainThread() {
@@ -196,6 +198,21 @@ class FeedUIIntegrationTests: XCTestCase {
         let exp = expectation(description: "Wait for background queue")
         DispatchQueue.global().async {
             loader.completeFeedLoading(at: 0)
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_loadMoreCompletion_dispatchesFromBackgroundThreadToMainThread() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(at: 0)
+        sut.simulateLoadMoreFeedAction()
+        
+        let exp = expectation(description: "Wait for background queue")
+        DispatchQueue.global().async {
+            loader.completeLoadMore()
             exp.fulfill()
         }
         
