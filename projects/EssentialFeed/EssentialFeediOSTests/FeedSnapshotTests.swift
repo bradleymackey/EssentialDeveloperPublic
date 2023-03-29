@@ -26,6 +26,14 @@ class FeedSnapshotTests: XCTestCase {
         
         record(snapshot: sut.snapshot(), named: "FEED_WITH_CONTENT")
     }
+    
+    func test_feedWithErrorMessage() throws {
+        let sut = try makeSUT()
+        
+        sut.display(.error(message: "An error message...\n...with another line!"))
+        
+        record(snapshot: sut.snapshot(), named: "FEED_WITH_ERROR_MESSAGE")
+    }
 }
 
 // MARK: - Helpers
