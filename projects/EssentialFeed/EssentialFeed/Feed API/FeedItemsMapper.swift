@@ -16,8 +16,6 @@ internal final class FeedItemsMapper {
         var items: [RemoteFeedItem]
     }
     
-    private static var OK_200: Int { 200 }
-    
     internal static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteFeedItem] {
         // We are decoding AND checking the status code here.
         // However, this is not a violation of the single responsibility principle because
@@ -29,7 +27,7 @@ internal final class FeedItemsMapper {
         // If, for example, there was a 401 repsonse this component would simply reject the response (rather than handling reauthentication).
         // Another component would handle the authentication so that this component could
         // then fetch valid data from a 200 response.
-        guard response.statusCode == OK_200 else {
+        guard response.isOK else {
             throw RemoteFeedLoader.Error.invalidData
         }
         
