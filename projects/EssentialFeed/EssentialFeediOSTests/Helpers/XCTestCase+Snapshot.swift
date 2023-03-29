@@ -9,7 +9,7 @@ import XCTest
 import UIKit
 
 extension XCTestCase {
-    func assert(snapshot: UIImage, named name: String, file: StaticString = #file, line: UInt = #line) {
+    func assert(snapshot: UIImage, named name: String, file: StaticString = #filePath, line: UInt = #line) {
         let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
         let snapshotURL = makeSnapshotURL(named: name, file: file)
         
@@ -28,7 +28,7 @@ extension XCTestCase {
         }
     }
     
-    func record(snapshot: UIImage, named name: String, file: StaticString = #file, line: UInt = #line) {
+    func record(snapshot: UIImage, named name: String, file: StaticString = #filePath, line: UInt = #line) {
         let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
         let snapshotURL = makeSnapshotURL(named: name, file: file)
         
