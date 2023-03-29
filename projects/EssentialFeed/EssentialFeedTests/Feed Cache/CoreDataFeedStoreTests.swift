@@ -10,113 +10,113 @@ import EssentialFeed
 
 class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs, FailableFeedStoreSpecs {
     
-    func test_retrieve_deliversEmptyOnEmptyCache() {
-        let sut = makeSUT()
+    func test_retrieve_deliversEmptyOnEmptyCache() throws {
+        let sut = try makeSUT()
         
         assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
     }
     
-    func test_retrieve_hasNoSideEffectsOnEmptyCache() {
-        let sut = makeSUT()
+    func test_retrieve_hasNoSideEffectsOnEmptyCache() throws {
+        let sut = try makeSUT()
         
         assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: sut)
     }
     
-    func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
-        let sut = makeSUT()
+    func test_retrieve_deliversFoundValuesOnNonEmptyCache() throws {
+        let sut = try makeSUT()
         
         assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(on: sut)
     }
     
-    func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
-        let sut = makeSUT()
+    func test_retrieve_hasNoSideEffectsOnNonEmptyCache() throws {
+        let sut = try makeSUT()
         
         assertThatRetrieveHasNoSideEffectsOnNonEmptyCache(on: sut)
     }
     
-    func test_retrieve_deliversErrorOnRetrievalError() {
+    func test_retrieve_deliversErrorOnRetrievalError() throws {
         let stub = NSManagedObjectContext.alwaysFailingFetchStub()
         stub.startIntercepting()
         
-        let sut = makeSUT()
+        let sut = try makeSUT()
         
         assertThatRetrieveDeliversFailureOnRetrievalError(on: sut)
     }
     
-    func test_retrieve_hasNoSideEffectsOnRetrievalError() {
+    func test_retrieve_hasNoSideEffectsOnRetrievalError() throws {
         let stub = NSManagedObjectContext.alwaysFailingFetchStub()
         stub.startIntercepting()
         
-        let sut = makeSUT()
+        let sut = try makeSUT()
         
         assertThatRetrieveHasNoSideEffectsOnFailure(on: sut)
     }
     
-    func test_insert_deliversNoErrorOnEmptyCache() {
-        let sut = makeSUT()
+    func test_insert_deliversNoErrorOnEmptyCache() throws {
+        let sut = try makeSUT()
         
         assertThatInsertDeliversNoErrorOnEmptyCache(on: sut)
     }
     
-    func test_insert_deliversNoErrorOnNonEmptyCache() {
-        let sut = makeSUT()
+    func test_insert_deliversNoErrorOnNonEmptyCache() throws {
+        let sut = try makeSUT()
         
         assertThatInsertDeliversNoErrorOnNonEmptyCache(on: sut)
     }
 
-    func test_insert_overridesPreviouslyInsertedCachedValues() {
-        let sut = makeSUT()
+    func test_insert_overridesPreviouslyInsertedCachedValues() throws {
+        let sut = try makeSUT()
         
         assertThatInsertOverridesPreviouslyInsertedCacheValues(on: sut)
     }
     
-    func test_insert_deliversErrorOnInsertionError() {
+    func test_insert_deliversErrorOnInsertionError() throws {
         let stub = NSManagedObjectContext.alwaysFailingSaveStub()
         stub.startIntercepting()
         
-        let sut = makeSUT()
+        let sut = try makeSUT()
         
         assertThatInsertDeliversErrorOnInsertionError(on: sut)
     }
     
-    func test_insert_hasNoSideEffectsOnInsertionError() {
+    func test_insert_hasNoSideEffectsOnInsertionError() throws {
         let stub = NSManagedObjectContext.alwaysFailingSaveStub()
         stub.startIntercepting()
 
-        let sut = makeSUT()
+        let sut = try makeSUT()
 
         assertThatInsertHasNoSideEffectsOnInsertionError(on: sut)
     }
     
-    func test_delete_deliversNoErrorOnEmptyCache() {
-        let sut = makeSUT()
+    func test_delete_deliversNoErrorOnEmptyCache() throws {
+        let sut = try makeSUT()
         
         assertThatDeleteDeliversNoErrorOnEmptyCache(on: sut)
     }
     
-    func test_delete_hasNoSideEffectsOnEmptyCache() {
-        let sut = makeSUT()
+    func test_delete_hasNoSideEffectsOnEmptyCache() throws {
+        let sut = try makeSUT()
         
         assertThatDeleteHasNoSideEffectsOnEmptyCache(on: sut)
     }
     
-    func test_delete_deliversNoErrorOnNonEmptyCache() {
-        let sut = makeSUT()
+    func test_delete_deliversNoErrorOnNonEmptyCache() throws {
+        let sut = try makeSUT()
         
         assertThatDeleteDeliversNoErrorOnNonEmptyCache(on: sut)
     }
     
-    func test_delete_emptiesPreviouslyInsertedCache() {
-        let sut = makeSUT()
+    func test_delete_emptiesPreviouslyInsertedCache() throws {
+        let sut = try makeSUT()
         
         assertThatDeleteEmptiesPreviouslyInsertedCache(on: sut)
     }
     
-    func test_delete_deliversErrorOnDeletionError() {
+    func test_delete_deliversErrorOnDeletionError() throws {
         let stub = NSManagedObjectContext.alwaysFailingSaveStub()
         let feed = uniqueFeed().local
         let timestamp = Date()
-        let sut = makeSUT()
+        let sut = try makeSUT()
 
         insert((feed, timestamp), to: sut)
 
@@ -127,11 +127,11 @@ class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs, FailableFeedStoreSpecs
         XCTAssertNotNil(deletionError, "Expected cache deletion to fail")
     }
     
-    func test_delete_hasNoSideEffectsOnDeletionError() {
+    func test_delete_hasNoSideEffectsOnDeletionError() throws {
         let stub = NSManagedObjectContext.alwaysFailingSaveStub()
         let feed = uniqueFeed().local
         let timestamp = Date()
-        let sut = makeSUT()
+        let sut = try makeSUT()
 
         insert((feed, timestamp), to: sut)
 
@@ -143,7 +143,7 @@ class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs, FailableFeedStoreSpecs
     }
     
     func test_delete_removesAllObjects() throws {
-        let store = makeSUT()
+        let store = try makeSUT()
 
         insert((uniqueFeed().local, Date()), to: store)
 
@@ -160,8 +160,8 @@ class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs, FailableFeedStoreSpecs
         XCTAssertEqual(existingObjects, [], "found orphaned objects in Core Data")
     }
     
-    func test_storeSideEffects_runSerially() {
-        let sut = makeSUT()
+    func test_storeSideEffects_runSerially() throws {
+        let sut = try makeSUT()
         
         assertThatSideEffectsRunSerially(on: sut)
     }
@@ -172,9 +172,9 @@ class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs, FailableFeedStoreSpecs
 
 extension CoreDataFeedStoreTests {
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> FeedStore {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) throws -> FeedStore {
         let storeBundle = Bundle(for: CoreDataFeedStore.self)
-        let sut = try! CoreDataFeedStore(storeURL: inMemoryStoreURL(), bundle: storeBundle)
+        let sut = try CoreDataFeedStore(storeURL: inMemoryStoreURL(), bundle: storeBundle)
         trackForMemoryLeaks(sut)
         return sut
     }
