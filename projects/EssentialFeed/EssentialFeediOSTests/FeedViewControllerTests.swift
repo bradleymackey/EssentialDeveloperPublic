@@ -111,6 +111,24 @@ final class FeedViewControllerTests: XCTestCase {
         sut.simulateFeedImageViewVisible(at: 1)
         XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected second image URL request once the second view becomes visible")
     }
+    
+    func test_feedImageView_cancelsImageLoadingWhenNotVisibleAnymore() {
+        let image0 = makeImage(url: URL(string: "http://url-0.com")!)
+        let image1 = makeImage(url: URL(string: "http://url-1.com")!)
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [image0, image1])
+        
+        XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no image URL cancellations until views become non-visible")
+        
+        
+        sut.simulateFeedImageViewNotVisible(at: 0)
+        XCTAssertEqual(loader.cancelledImageURLs, [image0.url], "Expected first image URL request to cancel when not visible")
+        
+        sut.simulateFeedImageViewNotVisible(at: 1)
+        XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected second image URL request to cancel when not visible")
+    }
 }
 
 // MARK: - Assertions
@@ -186,9 +204,14 @@ extension FeedViewControllerTests {
         // MARK: - FeedImageDataLoader
         
         private(set) var loadedImageURLs = [URL]()
+        private(set) var cancelledImageURLs = [URL]()
         
         func loadImageData(from url: URL) {
             loadedImageURLs.append(url)
+        }
+        
+        func cancelImageDataLoad(from url: URL) {
+            cancelledImageURLs.append(url)
         }
     }
     
@@ -209,6 +232,15 @@ private extension FeedViewController {
         let dele = tableView.delegate
         let index = IndexPath(row: row, section: feedImagesSection)
         dele?.tableView?(tableView, willDisplay: cell, forRowAt: index)
+    }
+    
+    func simulateFeedImageViewNotVisible(at row: Int) {
+        guard let cell = feedImageView(at: row) else {
+            fatalError("Invalid index path!")
+        }
+        let dele = tableView.delegate
+        let index = IndexPath(row: row, section: feedImagesSection)
+        dele?.tableView?(tableView, didEndDisplaying: cell, forRowAt: index)
     }
     
     var isShowingLoadingIndicator: Bool {
