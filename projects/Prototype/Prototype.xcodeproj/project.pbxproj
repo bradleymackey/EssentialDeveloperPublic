@@ -15,6 +15,7 @@
 		1C02FCC4289FCB080061CB1F /* PrototypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C02FCC3289FCB080061CB1F /* PrototypeTests.swift */; };
 		1C02FCCE289FCB080061CB1F /* PrototypeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C02FCCD289FCB080061CB1F /* PrototypeUITests.swift */; };
 		1C02FCD0289FCB080061CB1F /* PrototypeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C02FCCF289FCB080061CB1F /* PrototypeUITestsLaunchTests.swift */; };
+		1C02FCDD289FD0C80061CB1F /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C02FCDC289FD0C80061CB1F /* FeedViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		1C02FCC9289FCB080061CB1F /* PrototypeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PrototypeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C02FCCD289FCB080061CB1F /* PrototypeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrototypeUITests.swift; sourceTree = "<group>"; };
 		1C02FCCF289FCB080061CB1F /* PrototypeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrototypeUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		1C02FCDC289FD0C80061CB1F /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			children = (
 				1C02FCAC289FCB050061CB1F /* AppDelegate.swift */,
 				1C02FCAE289FCB050061CB1F /* SceneDelegate.swift */,
+				1C02FCDC289FD0C80061CB1F /* FeedViewController.swift */,
 				1C02FCB2289FCB050061CB1F /* Main.storyboard */,
 				1C02FCB5289FCB070061CB1F /* Assets.xcassets */,
 				1C02FCB7289FCB070061CB1F /* LaunchScreen.storyboard */,
@@ -256,6 +259,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C02FCAD289FCB050061CB1F /* AppDelegate.swift in Sources */,
+				1C02FCDD289FD0C80061CB1F /* FeedViewController.swift in Sources */,
 				1C02FCAF289FCB050061CB1F /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
