@@ -8,7 +8,7 @@
 import XCTest
 import EssentialFeed
 
-class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
+class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs, FailableFeedStoreSpecs {
     
     func test_retrieve_deliversEmptyOnEmptyCache() {
         let sut = makeSUT()
@@ -32,6 +32,14 @@ class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
         let sut = makeSUT()
         
         assertThatRetrieveHasNoSideEffectsOnNonEmptyCache(on: sut)
+    }
+    
+    func test_retrieve_deliversErrorOnRetrievalError() {
+        // TODO
+    }
+    
+    func test_retrieve_hasNoSideEffectsOnRetrievalError() {
+        // TODO
     }
     
     func test_insert_deliversNoErrorOnEmptyCache() {
@@ -61,6 +69,10 @@ class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
         assertThatInsertDeliversErrorOnInsertionError(on: sut)
     }
     
+    func test_insert_hasNoSideEffectsOnInsertionError() {
+        // TODO
+    }
+    
     func test_delete_deliversNoErrorOnEmptyCache() {
         let sut = makeSUT()
         
@@ -83,6 +95,14 @@ class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
         let sut = makeSUT()
         
         assertThatDeleteEmptiesPreviouslyInsertedCache(on: sut)
+    }
+    
+    func test_delete_deliversErrorOnDeletionError() {
+        // TODO
+    }
+    
+    func test_delete_hasNoSideEffectsOnDeletionError() {
+        // TODO
     }
     
     func test_storeSideEffects_runSerially() {
