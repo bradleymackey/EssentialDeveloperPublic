@@ -16,6 +16,10 @@ func anyNSError() -> NSError {
     NSError(domain: "any", code: 101)
 }
 
+func anyData() -> Data {
+    Data("any".utf8)
+}
+
 func uniqueFeed() -> [FeedImage] {
     [FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())]
 }
