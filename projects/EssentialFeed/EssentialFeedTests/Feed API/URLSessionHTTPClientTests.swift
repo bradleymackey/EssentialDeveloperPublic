@@ -111,11 +111,15 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     
     private func resultFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> HTTPClientResult {
+        // stub, so the next request will return this dummy data
         URLProtocolStub.stub(data: data, response: response, error: error)
         let sut = makeSUT(file: file, line: line)
         
         let exp = expectation(description: "Wait for result completion")
         var recievedResult: HTTPClientResult!
+        // request hitting the network should return the dummy data
+        // the thing we are actually testing is this get method -> we want to make
+        // sure the mapping from URLSession to our custom type is bug-free
         sut.get(from: anyURL()) { result in
             recievedResult = result
             exp.fulfill()
@@ -145,6 +149,11 @@ class URLSessionHTTPClientTests: XCTestCase {
         HTTPURLResponse(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
     }
     
+    /// A low-level listener that will intercept all URLSession traffic.
+    /// It can be used to stub URLSession requests for all data, ensuring that no
+    /// URLSession data hits the network during testing.
+    ///
+    /// Call the interception methods to start and stop the interception.
     private class URLProtocolStub: URLProtocol {
         private static var stub: Stub?
         private static var requestObserver: ((URLRequest) -> Void)?
@@ -169,6 +178,9 @@ class URLSessionHTTPClientTests: XCTestCase {
             URLProtocol.unregisterClass(Self.self)
         }
         
+        /// Stub the current state of the URLProtocol stack.
+        /// The next request made will have this data returned as it's response in the
+        /// URLSession system.
         static func stub(data: Data?, response: URLResponse?, error: Error?) {
             stub = Stub(data: data, response: response, error: error)
         }
