@@ -88,6 +88,7 @@
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6nH-nf-Veu">
                                                             <rect key="frame" x="0.0" y="0.0" width="353" height="353"/>
+                                                            <accessibility key="accessibilityConfiguration" identifier="feed-image-view"/>
                                                         </imageView>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m4T-KN-9uy">
                                                             <rect key="frame" x="0.0" y="0.0" width="353" height="353"/>
@@ -136,6 +137,7 @@
                                         <constraint firstAttribute="bottomMargin" secondItem="Rvj-3x-l0G" secondAttribute="bottom" priority="999" constant="6" id="z4I-Uy-SRE"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <accessibility key="accessibilityConfiguration" identifier="feed-image-cell"/>
                                 <connections>
                                     <outlet property="descriptionLabel" destination="zj8-NQ-eSK" id="NdI-5L-Avm"/>
                                     <outlet property="feedImageContainer" destination="0yN-eq-ZLH" id="wTz-uO-c5j"/>
@@ -165,7 +167,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sf4-El-USF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-393" y="-162"/>
+            <point key="canvasLocation" x="-413" y="-163"/>
         </scene>
     </scenes>
     <resources>
