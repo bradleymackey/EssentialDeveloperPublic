@@ -7,15 +7,17 @@
 
 import Foundation
 
-class RemoteFeedLoader {
-    // Inject the HTTP client dependency to ensure there is not a strong coupling
-    let client: HTTPClient
-    let url: URL
-    init(url: URL, client: HTTPClient) {
+// Inject the HTTP client dependency to ensure there is not a strong coupling
+
+public final class RemoteFeedLoader {
+    private let url: URL
+    private let client: HTTPClient
+    
+    public init(url: URL, client: HTTPClient) {
         self.url = url
         self.client = client
     }
-    func load() {
+    public func load() {
         client.get(from: url)
     }
 }

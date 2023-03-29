@@ -9,6 +9,6 @@ import Foundation
 
 // There's no reason that HTTPClient needs to be a singleton.
 // We can extend URLSession
-protocol HTTPClient {
+public protocol HTTPClient {
     func get(from url: URL)
 }
