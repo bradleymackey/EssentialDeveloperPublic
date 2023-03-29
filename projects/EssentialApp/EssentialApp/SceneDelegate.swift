@@ -5,6 +5,7 @@
 //  Created by Bradley Mackey on 06/03/2023.
 //
 
+import os
 import UIKit
 import CoreData
 import Combine
@@ -18,6 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
     }()
     
+    private lazy var logger = Logger(subsystem: "com.bradleymackey.EssentialApp", category: "main")
+    
     private lazy var store: FeedStore & FeedImageDataStore = {
         do {
             return try CoreDataFeedStore(storeURL: NSPersistentContainer
@@ -26,6 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             )
         } catch {
             assertionFailure("Failed to instantiate CoreData store with error \(error.localizedDescription)")
+            logger.fault("Failed to instantiate CoreData store with error \(error.localizedDescription)")
             return NullStore()
         }
     }()
