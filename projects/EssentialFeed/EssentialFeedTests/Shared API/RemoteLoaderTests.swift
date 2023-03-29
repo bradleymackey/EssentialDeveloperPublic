@@ -1,24 +1,14 @@
 //
-//  LoadFromRemoteUseCaseTests.swift
+//  RemoteLoaderTests.swift
 //  EssentialFeedTests
 //
-//  Created by Bradley Mackey on 12/04/2022.
+//  Created by Bradley Mackey on 25/03/2023.
 //
 
 import XCTest
 @testable import EssentialFeed
 
-// We test drive the implementation before implementing anything concrete.
-
-class LoadFromRemoteUseCaseTests: XCTestCase {
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-    
+class RemoteLoaderTests: XCTestCase {
     func test_init_doesNotRequestDataFromURL() {
         let (_, client) = makeSUT()
         
@@ -50,7 +40,7 @@ class LoadFromRemoteUseCaseTests: XCTestCase {
         // ACT
         // (client and completions belongs to the 'act')
         // (part of the tests)
-        var capturedResults = [RemoteFeedLoader.Result]()
+        var capturedResults = [RemoteLoader.Result]()
         sut.load(completion: { capturedResults.append($0) })
         
         // Complete after the load starts, making this code easy to
@@ -65,7 +55,7 @@ class LoadFromRemoteUseCaseTests: XCTestCase {
         // ASSERT
         XCTAssertEqual(capturedResults.count, 1)
         XCTAssertThrowsError(try capturedResults[0].get(), "Error state") { error in
-            XCTAssertEqual(error as! RemoteFeedLoader.Error, .connectivity)
+            XCTAssertEqual(error as! RemoteLoader.Error, .connectivity)
         }
     }
     
@@ -134,9 +124,9 @@ class LoadFromRemoteUseCaseTests: XCTestCase {
     func test_load_doesNotDeliverResultsAfterSUTInstanceHasBeenDeallocated() {
         let url = URL(string: "https://a-url.com")!
         let client = HTTPClientSpy()
-        var sut: RemoteFeedLoader? = RemoteFeedLoader(url: url, client: client)
+        var sut: RemoteLoader? = RemoteLoader(url: url, client: client)
         
-        var capturedResults = [RemoteFeedLoader.Result]()
+        var capturedResults = [RemoteLoader.Result]()
         sut?.load { capturedResults.append($0) }
         
         sut = nil
@@ -150,11 +140,11 @@ class LoadFromRemoteUseCaseTests: XCTestCase {
 
 // MARK: - Helpers
 
-extension LoadFromRemoteUseCaseTests {
+extension RemoteLoaderTests {
     
-    private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedLoader, client: HTTPClientSpy) {
+    private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteLoader, client: HTTPClientSpy) {
         let client = HTTPClientSpy()
-        let sut = RemoteFeedLoader(url: url, client: client)
+        let sut = RemoteLoader(url: url, client: client)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(client, file: file, line: line)
@@ -162,7 +152,7 @@ extension LoadFromRemoteUseCaseTests {
         return (sut, client)
     }
     
-    private func failure(_ error: RemoteFeedLoader.Error) -> FeedLoader.Result {
+    private func failure(_ error: RemoteLoader.Error) -> RemoteLoader.Result {
         .failure(error)
     }
     
@@ -187,14 +177,14 @@ extension LoadFromRemoteUseCaseTests {
         return try! JSONSerialization.data(withJSONObject: itemsJSON)
     }
     
-    private func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: FeedLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    private func expect(_ sut: RemoteLoader, toCompleteWith expectedResult: RemoteLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         
         let exp = expectation(description: "Wait for load to complete")
         sut.load { recievedResult in
             switch (recievedResult, expectedResult) {
             case let (.success(recievedItems), .success(expectedItems)):
                 XCTAssertEqual(recievedItems, expectedItems, file: file, line: line)
-            case let (.failure(recievedError as RemoteFeedLoader.Error), .failure(expectedError as RemoteFeedLoader.Error)):
+            case let (.failure(recievedError as RemoteLoader.Error), .failure(expectedError as RemoteLoader.Error)):
                 XCTAssertEqual(recievedError, expectedError, file: file, line: line)
             default:
                 XCTFail("Expected result \(expectedResult) got \(recievedResult) instead", file: file, line: line)
