@@ -59,7 +59,7 @@ extension ImageCommentsSnapshotTests {
                     username: "l"
                 )
             ),
-        ]
+        ].map { CellController($0) }
     }
     
 }
