@@ -18,11 +18,11 @@ public struct Paginated<Item> {
     /// A closure to fetch more items.
     ///
     /// This hides the implementation detail of how the paging actually occurs.
-    public let loadMore: ((LoadMoreCompletion) -> Void)?
+    public let loadMore: ((@escaping LoadMoreCompletion) -> Void)?
     
     public init(
         items: [Item],
-        loadMore: ((LoadMoreCompletion) -> Void)? = nil
+        loadMore: ((@escaping LoadMoreCompletion) -> Void)? = nil
     ) {
         self.items = items
         self.loadMore = loadMore
