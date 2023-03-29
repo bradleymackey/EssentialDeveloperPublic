@@ -110,6 +110,7 @@
                         <connections>
                             <outlet property="dataSource" destination="Viu-Mr-VWE" id="pes-VD-5J0"/>
                             <outlet property="delegate" destination="Viu-Mr-VWE" id="9P0-re-KIG"/>
+                            <outlet property="prefetchDataSource" destination="Viu-Mr-VWE" id="64f-Lo-SxZ"/>
                         </connections>
                     </tableView>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="NQI-gY-mRi">
