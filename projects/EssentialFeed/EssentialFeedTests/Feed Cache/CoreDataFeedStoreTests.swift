@@ -113,16 +113,33 @@ class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs, FailableFeedStoreSpecs
     }
     
     func test_delete_deliversErrorOnDeletionError() {
-        let stub = NSManagedObjectContext.alwaysFailingFetchStub()
-        stub.startIntercepting()
-        
+        let stub = NSManagedObjectContext.alwaysFailingSaveStub()
+        let feed = uniqueFeed().local
+        let timestamp = Date()
         let sut = makeSUT()
-        
-        assertThatDeleteDeliversErrorOnDeletionError(on: sut)
+
+        insert((feed, timestamp), to: sut)
+
+        stub.startIntercepting()
+
+        let deletionError = deleteCache(from: sut)
+
+        XCTAssertNotNil(deletionError, "Expected cache deletion to fail")
     }
     
     func test_delete_hasNoSideEffectsOnDeletionError() {
-        // TODO
+        let stub = NSManagedObjectContext.alwaysFailingSaveStub()
+        let feed = uniqueFeed().local
+        let timestamp = Date()
+        let sut = makeSUT()
+
+        insert((feed, timestamp), to: sut)
+
+        stub.startIntercepting()
+
+        deleteCache(from: sut)
+
+        expect(sut, toRetrieve: .success(.init(feed: feed, timestamp: timestamp)))
     }
     
     func test_storeSideEffects_runSerially() {
