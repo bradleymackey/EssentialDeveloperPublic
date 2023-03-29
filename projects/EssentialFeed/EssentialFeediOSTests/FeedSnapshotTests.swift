@@ -114,6 +114,8 @@ extension FeedSnapshotTests {
         } catch {
             XCTFail("Failed to record snapshot: \(error)", file: file, line: line)
         }
+        
+        XCTFail("Recording, use `assert` to validate snapshot", file: file, line: line)
     }
     
     private func makeSnapshotURL(named name: String, file: StaticString) -> URL {
