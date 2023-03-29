@@ -1,5 +1,5 @@
 //
-//  RemoteFeedLoaderTests.swift
+//  LoadFromRemoteUseCaseTests.swift
 //  EssentialFeedTests
 //
 //  Created by Bradley Mackey on 12/04/2022.
@@ -10,7 +10,7 @@ import XCTest
 
 // We test drive the implementation before implementing anything concrete.
 
-class RemoteFeedLoaderTests: XCTestCase {
+class LoadFromRemoteUseCaseTests: XCTestCase {
     
     
     override func setUpWithError() throws {
@@ -152,7 +152,7 @@ class RemoteFeedLoaderTests: XCTestCase {
 
 // MARK: - Helpers
 
-extension RemoteFeedLoaderTests {
+extension LoadFromRemoteUseCaseTests {
     
     /// Move the test logic to a test type - the client spy.
     /// this mimicks the behaviour of the parent without having to actually make
