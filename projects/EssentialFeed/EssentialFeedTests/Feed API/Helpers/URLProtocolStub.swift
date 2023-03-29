@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// - Note: this is isolated to the main actor to prevent internal data races.
+/// This allows your tests to be thread-safe.
 @MainActor
 final class URLProtocolStub: URLProtocol {
     @MainActor
