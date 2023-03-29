@@ -17,6 +17,7 @@
 		1C02FCD0289FCB080061CB1F /* PrototypeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C02FCCF289FCB080061CB1F /* PrototypeUITestsLaunchTests.swift */; };
 		1C02FCDD289FD0C80061CB1F /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C02FCDC289FD0C80061CB1F /* FeedViewController.swift */; };
 		1C02FCDF289FD2870061CB1F /* FeedImageViewModel+PrototypeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C02FCDE289FD2870061CB1F /* FeedImageViewModel+PrototypeData.swift */; };
+		1C02FCE1289FD31C0061CB1F /* FeedImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C02FCE0289FD31C0061CB1F /* FeedImageCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		1C02FCCF289FCB080061CB1F /* PrototypeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrototypeUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1C02FCDC289FD0C80061CB1F /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		1C02FCDE289FD2870061CB1F /* FeedImageViewModel+PrototypeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedImageViewModel+PrototypeData.swift"; sourceTree = "<group>"; };
+		1C02FCE0289FD31C0061CB1F /* FeedImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				1C02FCAE289FCB050061CB1F /* SceneDelegate.swift */,
 				1C02FCDC289FD0C80061CB1F /* FeedViewController.swift */,
 				1C02FCDE289FD2870061CB1F /* FeedImageViewModel+PrototypeData.swift */,
+				1C02FCE0289FD31C0061CB1F /* FeedImageCell.swift */,
 				1C02FCB2289FCB050061CB1F /* Main.storyboard */,
 				1C02FCB5289FCB070061CB1F /* Assets.xcassets */,
 				1C02FCB7289FCB070061CB1F /* LaunchScreen.storyboard */,
@@ -265,6 +268,7 @@
 				1C02FCDD289FD0C80061CB1F /* FeedViewController.swift in Sources */,
 				1C02FCAF289FCB050061CB1F /* SceneDelegate.swift in Sources */,
 				1C02FCDF289FD2870061CB1F /* FeedImageViewModel+PrototypeData.swift in Sources */,
+				1C02FCE1289FD31C0061CB1F /* FeedImageCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

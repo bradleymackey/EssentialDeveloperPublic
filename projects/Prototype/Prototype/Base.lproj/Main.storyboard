@@ -16,7 +16,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="FeedImageCell" rowHeight="626" id="N0v-72-uYr">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="FeedImageCell" rowHeight="626" id="N0v-72-uYr" customClass="FeedImageCell" customModule="Prototype" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="49.5" width="414" height="626"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="N0v-72-uYr" id="9CW-dg-FOO">
@@ -92,6 +92,12 @@
                                         <constraint firstAttribute="bottomMargin" secondItem="AdW-gw-Btx" secondAttribute="bottom" priority="999" constant="6" id="emr-7c-ile"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="descriptionLabel" destination="BEc-l5-dWL" id="a1O-8s-S3C"/>
+                                    <outlet property="feedImageView" destination="7rn-q7-kVS" id="Wrm-R5-8Jf"/>
+                                    <outlet property="locationContainer" destination="XuQ-He-0fg" id="czs-vc-50e"/>
+                                    <outlet property="locationLabel" destination="Bz2-7j-mYg" id="pUL-ZV-A7y"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
