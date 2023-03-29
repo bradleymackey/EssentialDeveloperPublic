@@ -7,3 +7,6 @@
 [submodule "ios-lead-essentials-feed-store-challenge"]
 	path = ios-lead-essentials-feed-store-challenge
 	url = https://github.com/bradleymackey/ios-lead-essentials-feed-store-challenge
+[submodule "ios-lead-essentials-feed-api-challenge"]
+	path = ios-lead-essentials-feed-api-challenge
+	url = https://github.com/bradleymackey/ios-lead-essentials-feed-api-challenge
