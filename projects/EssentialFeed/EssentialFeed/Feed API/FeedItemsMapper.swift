@@ -11,7 +11,7 @@ import Foundation
 // Therefore, we are only testing the public interface.
 // This allows us to refactor any internal structures without breaking any tests.
 
-internal final class FeedItemsMapper {
+public final class FeedItemsMapper {
     private struct Root: Decodable {
         private let items: [RemoteFeedItem]
         
@@ -27,7 +27,7 @@ internal final class FeedItemsMapper {
         }
     }
     
-    internal static func map(_ data: Data, from response: HTTPURLResponse) throws -> [FeedImage] {
+    public static func map(_ data: Data, from response: HTTPURLResponse) throws -> [FeedImage] {
         // We are decoding AND checking the status code here.
         // However, this is not a violation of the single responsibility principle because
         // this functionality is based on the API contract, which includes the status code.
