@@ -21,9 +21,14 @@ class LocalFeedLoader {
 
 class FeedStore {
     var deleteCachedFeedCallCount = 0
+    var insertCallCount = 0
     
     func deleteCachedFeed() {
         deleteCachedFeedCallCount += 1
+    }
+    
+    func completeDeletion(with error: Error, at index: Int = 0) {
+        
     }
 }
 
@@ -42,6 +47,19 @@ final class CacheFeedUseCaseTests: XCTestCase {
         sut.save(items)
         
         XCTAssertEqual(store.deleteCachedFeedCallCount, 1)
+    }
+    
+    func test_save_doesNotRequestCacheInsertionOnDeletionError() {
+        let items = [uniqueItem(), uniqueItem()]
+        let (sut, store) = makeSUT()
+        let deletionError = anyNSError()
+        
+        sut.save(items)
+        store.completeDeletion(with: deletionError)
+        
+        // it's important not only to have tests that a method WAS called when it was supposed to,
+        // but also to have tests to ensure that a method WAS NOT called when it was not supposed to.
+        XCTAssertEqual(store.insertCallCount, 0)
     }
     
 }
@@ -69,6 +87,10 @@ extension CacheFeedUseCaseTests {
     
     private func anyURL() -> URL {
         URL(string: "https://google.com")!
+    }
+    
+    private func anyNSError() -> NSError {
+        NSError(domain: "domain", code: 1)
     }
     
 }
