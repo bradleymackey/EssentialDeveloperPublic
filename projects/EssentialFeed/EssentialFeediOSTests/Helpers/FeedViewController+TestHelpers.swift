@@ -27,13 +27,15 @@ extension FeedViewController {
         return cell
     }
     
-    func simulateFeedImageViewNotVisible(at row: Int) {
-        guard let cell = feedImageView(at: row) else {
+    @discardableResult
+    func simulateFeedImageViewNotVisible(at row: Int) -> FeedImageCell? {
+        guard let cell = feedImageView(at: row) as? FeedImageCell else {
             fatalError("Invalid index path!")
         }
         let dele = tableView.delegate
         let index = IndexPath(row: row, section: feedImagesSection)
         dele?.tableView?(tableView, didEndDisplaying: cell, forRowAt: index)
+        return cell
     }
     
     func simulateFeedImageViewNearVisible(at row: Int) {
