@@ -216,8 +216,6 @@
 				1CE712932822EBE80065176B /* LoadFeedFromCacheUseCaseTests.swift */,
 				1C4E6665282662380010117F /* ValidateFeedCacheUseCaseTests.swift */,
 				1C4B573F282EC43E008B8479 /* CodableFeedStoreTests.swift */,
-				1C11BD60283434E300AD4B39 /* FeedStoreSpecs.swift */,
-				1C11BD62283435F500AD4B39 /* XCTestCase+FeedStoreSpecs.swift */,
 			);
 			path = "Feed Cache";
 			sourceTree = "<group>";
@@ -237,6 +235,8 @@
 		1CE712952822EC700065176B /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				1C11BD62283435F500AD4B39 /* XCTestCase+FeedStoreSpecs.swift */,
+				1C11BD60283434E300AD4B39 /* FeedStoreSpecs.swift */,
 				1CE712962822EC790065176B /* FeedStoreSpy.swift */,
 				1C4E6667282665220010117F /* FeedCacheTestHelpers.swift */,
 			);
