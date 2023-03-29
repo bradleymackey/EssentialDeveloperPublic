@@ -14,7 +14,7 @@ import Foundation
 /// For example, a timestamp when it was added to the database.
 ///
 /// Data Transfer Object (DTO) -> this removes strong coupling between modules.
-public struct LocalFeedImage: Equatable, Codable {
+public struct LocalFeedImage: Equatable {
     public let id: UUID
     public let description: String?
     public let location: String?
