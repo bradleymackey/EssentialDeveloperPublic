@@ -79,6 +79,11 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         XCTAssertEqual(fallbackLoader.requestedURLs, [url])
     }
     
+    func test_load_deliversFailureOnBothPrimaryAndSecondaryLoaderFailure() {
+        let (sut, _, _) = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .failure(anyNSError()))
+        
+        expect(sut, url: anyURL(), toCompleteWith: .failure(anyNSError()))
+    }
 }
 
 // MARK: - Helpers
