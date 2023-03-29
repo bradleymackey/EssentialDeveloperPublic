@@ -7,36 +7,34 @@
 
 import Foundation
 
+// When we test this code, we don't import as 'testable', just the public interface.
+// Therefore, we are only testing the public interface.
+// This allows us to refactor any internal structures without breaking any tests.
+
+// We create a 'clone' of the FeedItem, that just handles the decoding for the RemoteFeedLoader.
+// This is because we don't want to tie the generic model 'FeedItem' to specific coding keys, which are context dependent on where the FeedItem is actually coming from.
+internal struct RemoteFeedItem: Decodable {
+    internal let id: UUID
+    internal let description: String?
+    internal let location: String?
+    internal let imageURL: URL
+    
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case description
+        case location
+        case imageURL = "image"
+    }
+}
+
 internal final class FeedItemsMapper {
     private struct Root: Decodable {
-        var items: [Item]
-        
-        var feed: [FeedItem] {
-            return items.map { $0.item }
-        }
+        var items: [RemoteFeedItem]
     }
     
-    // We create a 'clone' of the FeedItem, that just handles the decoding for the RemoteFeedLoader.
-    // This is because we don't want to tie the generic model 'FeedItem' to specific coding keys, which are context dependent on where the FeedItem is actually coming from.
-    private struct Item: Decodable {
-        let id: UUID
-        let description: String?
-        let location: String?
-        let imageURL: URL
-        
-        var item: FeedItem {
-            FeedItem(id: id, description: description, location: location, imageURL: imageURL)
-        }
-        
-        private enum CodingKeys: String, CodingKey {
-            case id
-            case description
-            case location
-            case imageURL = "image"
-        }
-    }
+    private static var OK_200: Int { 200 }
     
-    internal static func map(_ data: Data, from response: HTTPURLResponse) -> RemoteFeedLoader.Result {
+    internal static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteFeedItem] {
         // We are decoding AND checking the status code here.
         // However, this is not a violation of the single responsibility principle because
         // this functionality is based on the API contract, which includes the status code.
@@ -47,15 +45,15 @@ internal final class FeedItemsMapper {
         // If, for example, there was a 401 repsonse this component would simply reject the response (rather than handling reauthentication).
         // Another component would handle the authentication so that this component could
         // then fetch valid data from a 200 response.
-        guard response.statusCode == 200 else {
-            return .failure(RemoteFeedLoader.Error.invalidData)
+        guard response.statusCode == OK_200 else {
+            throw RemoteFeedLoader.Error.invalidData
         }
         
         do {
             let root = try JSONDecoder().decode(Root.self, from: data)
-            return .success(root.feed)
+            return root.items
         } catch {
-            return .failure(RemoteFeedLoader.Error.invalidData)
+            throw RemoteFeedLoader.Error.invalidData
         }
     }
 }

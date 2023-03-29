@@ -24,6 +24,7 @@ public final class RemoteFeedLoader: FeedLoader {
         self.url = url
         self.client = client
     }
+    
     public func load(completion: @escaping (LoadFeedResult) -> Void) {
         client.get(from: url) { [weak self] result in
             // if self is deallocated, do not run completion block!
@@ -32,12 +33,25 @@ public final class RemoteFeedLoader: FeedLoader {
             
             switch result {
             case let .success(data, response):
-                completion(FeedItemsMapper.map(data, from: response))
+                completion(RemoteFeedLoader.map(data, from: response))
             case .failure:
                 completion(.failure(RemoteFeedLoader.Error.connectivity))
             }
         }
     }
     
-    
+    private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+        do {
+            let items = try FeedItemsMapper.map(data, from: response)
+            return .success(items.toModels())
+        } catch {
+            return .failure(error)
+        }
+    }
+}
+
+private extension Array where Element == RemoteFeedItem {
+    func toModels() -> [FeedItem] {
+        map { FeedItem(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.imageURL) }
+    }
 }
