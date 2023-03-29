@@ -18,23 +18,23 @@ final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
     /// We're not leaking this composition detail into the adapters.
     ///
     /// (Constructor injection should be preferred whereever possible though!)
-    var presenter: FeedPresenter?
+    var presenter: LoadResourcePresenter<[FeedImage], FeedViewAdapter>?
     
     init(feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>) {
         self.feedLoader = feedLoader
     }
     
     func didRequestFeedRefresh() {
-        presenter?.didStartLoadingFeed()
+        presenter?.didStartLoading()
         cancellable = feedLoader().sink { [weak self] completion in
             switch completion {
             case .finished:
                 break
             case .failure(let error):
-                self?.presenter?.didFinishLoadingFeed(with: error)
+                self?.presenter?.didFinishLoading(with: error)
             }
         } receiveValue: { [weak self] feed in
-            self?.presenter?.didFinishLoadingFeed(with: feed)
+            self?.presenter?.didFinishLoading(with: feed)
         }
     }
 }
