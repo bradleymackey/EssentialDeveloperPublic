@@ -124,11 +124,11 @@ extension Publisher {
 }
 
 extension DispatchQueue {
-    static var immediateWhenOnMainQueueScheduler: some Scheduler {
+    static var immediateWhenOnMainQueueScheduler: ImmediateWhenOnMainQueueScheduler {
         ImmediateWhenOnMainQueueScheduler.shared
     }
     
-    private struct ImmediateWhenOnMainQueueScheduler: Scheduler {
+    struct ImmediateWhenOnMainQueueScheduler: Scheduler {
         typealias SchedulerTimeType = DispatchQueue.SchedulerTimeType
         typealias SchedulerOptions = DispatchQueue.SchedulerOptions
         
@@ -176,10 +176,10 @@ extension DispatchQueue {
 typealias AnyDispatchQueueScheduler = AnyScheduler<DispatchQueue.SchedulerTimeType, DispatchQueue.SchedulerOptions>
 
 extension AnyDispatchQueueScheduler {
-    static var immediateOnMainQueue: some Scheduler {
-        DispatchQueue.immediateWhenOnMainQueueScheduler.eraseToAnyScheduler()
-    }
-}
+     static var immediateOnMainQueue: Self {
+         DispatchQueue.immediateWhenOnMainQueueScheduler.eraseToAnyScheduler()
+     }
+ }
 
 extension Scheduler {
     func eraseToAnyScheduler() -> AnyScheduler<SchedulerTimeType, SchedulerOptions> {
