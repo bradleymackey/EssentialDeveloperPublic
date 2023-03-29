@@ -23,7 +23,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
         let deletionError = anyNSError()
         store.completeDeletion(with: deletionError)
         
-        sut.save(items.models) { _ in }
+        try? sut.save(items.models)
         
         // it's important not only to have tests that a method WAS called when it was supposed to,
         // but also to have tests to ensure that a method WAS NOT called when it was not supposed to.
@@ -36,7 +36,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { timestamp })
         store.completeDeletionSuccessfully()
         
-        sut.save(items.models) { _ in }
+        try? sut.save(items.models)
         
         XCTAssertEqual(
             store.recievedMessages,
@@ -86,21 +86,14 @@ extension CacheFeedUseCaseTests {
     }
     
     private func expect(_ sut: LocalFeedLoader, toCompleteWithError expectedError: NSError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
-        let exp = expectation(description: "Wait for save completion")
         action()
         
-        var receivedError: Error?
-        sut.save(uniqueFeed().models) { saveResult in
-            if case let Result.failure(error) = saveResult {
-                receivedError = error
-            }
-            exp.fulfill()
+        do {
+            try sut.save(uniqueFeed().models)
+        } catch {
+            let nsError = error as NSError
+            XCTAssertEqual(nsError.domain, expectedError?.domain, file: file, line: line)
+            XCTAssertEqual(nsError.code, expectedError?.code, file: file, line: line)
         }
-        
-        wait(for: [exp], timeout: 1.0)
-        
-        let nsError = receivedError as? NSError
-        XCTAssertEqual(nsError?.domain, expectedError?.domain, file: file, line: line)
-        XCTAssertEqual(nsError?.code, expectedError?.code, file: file, line: line)
     }
 }
