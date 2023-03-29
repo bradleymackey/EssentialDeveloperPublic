@@ -41,6 +41,13 @@ class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
 
 class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
     
+    func test_init_doesNotLoadImageData() {
+        let (_, primaryLoader, fallbackLoader) = makeSUT(primaryResult: .success(anyData()), fallbackResult: .success(anyData()))
+        
+        XCTAssertTrue(primaryLoader.requestedURLs.isEmpty, "Expected no URLs in primary loader")
+        XCTAssertTrue(fallbackLoader.requestedURLs.isEmpty, "Expected no URLs in fallback loader")
+    }
+    
     func test_load_deliversPrimaryImageOnPrimarySuccess() {
         let primaryData = uniqueImageData()
         let fallbackData = uniqueImageData()
@@ -84,6 +91,7 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         
         expect(sut, url: anyURL(), toCompleteWith: .failure(anyNSError()))
     }
+    
 }
 
 // MARK: - Helpers
@@ -151,5 +159,9 @@ extension FeedImageDataLoaderWithFallbackCompositeTests {
     
     private func uniqueImageData() -> Data {
         Data(UUID().uuidString.utf8)
+    }
+    
+    private func anyData() -> Data {
+        Data("any".utf8)
     }
 }
