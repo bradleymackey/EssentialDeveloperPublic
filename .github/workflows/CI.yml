@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: macos-12
+    runs-on: macos-11
     defaults:
       run:
         working-directory: ./projects/EssentialFeed
@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Select Xcode
-        run: sudo xcode-select -switch /Applications/Xcode_13.3.app
+        run: sudo xcode-select -switch /Applications/Xcode_13.2.app
       - name: Xcode version
         run: /usr/bin/xcodebuild -version
       - name: Build and test
