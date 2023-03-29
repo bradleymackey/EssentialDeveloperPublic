@@ -80,7 +80,7 @@ class LoadFromRemoteUseCaseTests: XCTestCase {
         
         samples.enumerated().forEach { index, code in
             expect(sut, toCompleteWith: failure(.invalidData)) {
-                let json = makeItemsJSON([])
+                let json = makeFeedJSON([])
                 client.complete(withStatusCode: code, data: json, at: index)
             }
         }
@@ -103,7 +103,7 @@ class LoadFromRemoteUseCaseTests: XCTestCase {
         
         // ACT, ASSERT
         expect(sut, toCompleteWith: .success([])) {
-            let emptyListJSON = makeItemsJSON([])
+            let emptyListJSON = makeFeedJSON([])
             client.complete(withStatusCode: 200, data: emptyListJSON)
         }
     }
@@ -112,21 +112,21 @@ class LoadFromRemoteUseCaseTests: XCTestCase {
         // ARRANGE
         let (sut, client) = makeSUT()
         
-        let item1 = makeItem(
+        let item1 = makeFeedImage(
             id: UUID(),
-            imageURL: URL(string: "https://a-url.com")!
+            url: URL(string: "https://a-url.com")!
         )
-        let item2 = makeItem(
+        let item2 = makeFeedImage(
             id: UUID(),
             description: "a description",
             location: "a location",
-            imageURL: URL(string: "https://a-url-2.com")!
+            url: URL(string: "https://a-url-2.com")!
         )
         
         let items = [item1, item2]
         
         expect(sut, toCompleteWith: .success(items.map(\.model))) {
-            let json = makeItemsJSON(items.map(\.json))
+            let json = makeFeedJSON(items.map(\.json))
             client.complete(withStatusCode: 200, data: json)
         }
     }
@@ -142,7 +142,7 @@ class LoadFromRemoteUseCaseTests: XCTestCase {
         sut?.load { capturedResults.append($0) }
         
         sut = nil
-        client.complete(withStatusCode: 200, data: makeItemsJSON([]))
+        client.complete(withStatusCode: 200, data: makeFeedJSON([]))
         
         XCTAssertTrue(capturedResults.isEmpty)
     }
@@ -211,23 +211,23 @@ extension LoadFromRemoteUseCaseTests {
         .failure(error)
     }
     
-    private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedItem, json: [String: Any]) {
-        let item = FeedItem(
+    private func makeFeedImage(id: UUID, description: String? = nil, location: String? = nil, url: URL) -> (model: FeedImage, json: [String: Any]) {
+        let item = FeedImage(
             id: id,
             description: description,
             location: location,
-            imageURL: imageURL
+            url: url
         )
         let itemJSON = [
             "id": item.id.uuidString,
-            "image": item.imageURL.absoluteString,
+            "image": item.url.absoluteString,
             "description": item.description,
             "location": item.location,
         ].compactMapValues { $0 }
         return (item, itemJSON)
     }
     
-    private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+    private func makeFeedJSON(_ items: [[String: Any]]) -> Data {
         let itemsJSON = ["items": items]
         return try! JSONSerialization.data(withJSONObject: itemsJSON)
     }

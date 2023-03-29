@@ -1,5 +1,5 @@
 //
-//  LocalFeedItem.swift
+//  LocalFeedImage.swift
 //  EssentialFeed
 //
 //  Created by Bradley Mackey on 30/04/2022.
@@ -14,16 +14,16 @@ import Foundation
 /// For example, a timestamp when it was added to the database.
 ///
 /// Data Transfer Object (DTO) -> this removes strong coupling between modules.
-public struct LocalFeedItem: Equatable {
+public struct LocalFeedImage: Equatable {
     public let id: UUID
     public let description: String?
     public let location: String?
-    public let imageURL: URL
+    public let url: URL
     
-    public init(id: UUID, description: String?, location: String?, imageURL: URL) {
+    public init(id: UUID, description: String?, location: String?, url: URL) {
         self.id = id
         self.description = description
         self.location = location
-        self.imageURL = imageURL
+        self.url = url
     }
 }
