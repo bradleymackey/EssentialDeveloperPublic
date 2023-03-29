@@ -7,6 +7,17 @@
 
 import Foundation
 
+// Frameworks don't make decisons, they just obey commands.
+//
+// The business logic (this LocalFeedLoader) is the 'what'.
+// The frameworks are the 'how'.
+//
+// This is why we abstract the `FeedStore`, which is just an abstraction that will probably
+// be a shim to a framework that supplies the storing logic, and it can easily be swapped out to
+// a spy for testing.
+//
+// We don't want to test the framework, we just want to test the business logic!
+
 public final class LocalFeedLoader {
     private let store: FeedStore
     private let currentDate: () -> Date
