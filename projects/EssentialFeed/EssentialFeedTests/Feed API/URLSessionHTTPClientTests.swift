@@ -32,12 +32,9 @@ class URLSessionHTTPClientTests: XCTestCase {
             exp.fulfill()
         }
         
-        // running a test here but not checking when it is finished will result in a data race
-        // (we could also just add the expectation in here)
-        let requestExp = expectation(description: "Wait for request to finish")
-        sut.get(from: url) { _ in requestExp.fulfill() }
+        sut.get(from: url) { _ in }
         
-        wait(for: [exp, requestExp], timeout: 1.0)
+        wait(for: [exp], timeout: 1.0)
     }
     
     func test_getFromURL_failsOnRequestError() {
@@ -193,7 +190,6 @@ class URLSessionHTTPClientTests: XCTestCase {
         // (we would just get a generic network error) which is hard to debug.
         // So we will add that assertion elsewhere, in another test.
         override class func canInit(with request: URLRequest) -> Bool {
-            requestObserver?(request)
             return true
         }
         
@@ -202,6 +198,13 @@ class URLSessionHTTPClientTests: XCTestCase {
         }
         
         override func startLoading() {
+            // If there's an observer, finish loading
+            // then invoke the observer.
+            if let requestObserver = URLProtocolStub.requestObserver {
+                client?.urlProtocolDidFinishLoading(self)
+                return requestObserver(request)
+            }
+            
             if let data = Self.stub?.data {
                 client?.urlProtocol(self, didLoad: data)
             }
