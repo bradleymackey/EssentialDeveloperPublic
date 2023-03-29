@@ -165,6 +165,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         
         static func stopInterceptingRequests() {
             stub = nil
+            requestObserver = nil
             URLProtocol.unregisterClass(Self.self)
         }
         
