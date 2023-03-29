@@ -1,5 +1,5 @@
 //
-//  FeedViewControllerTests.swift
+//  FeedUIIntegrationTests.swift
 //  EssentialFeediOSTests
 //
 //  Created by Bradley Mackey on 07/08/2022.
@@ -10,7 +10,7 @@ import UIKit
 import EssentialFeed
 import EssentialFeediOS
 
-final class FeedViewControllerTests: XCTestCase {
+final class FeedUIIntegrationTests: XCTestCase {
     
     func test_feedView_hasTitle() {
         let (sut, _) = makeSUT()
@@ -184,7 +184,7 @@ final class FeedViewControllerTests: XCTestCase {
 
 // MARK: - Assertions
 
-extension FeedViewControllerTests {
+extension FeedUIIntegrationTests {
     
     func test_feedImageViewRetryButton_isVisibleOnImageURLLoadError() {
         let (sut, loader) = makeSUT()
@@ -307,7 +307,7 @@ extension FeedViewControllerTests {
 
 // MARK: - Helpers
 
-extension FeedViewControllerTests {
+extension FeedUIIntegrationTests {
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
         let loader = LoaderSpy()
