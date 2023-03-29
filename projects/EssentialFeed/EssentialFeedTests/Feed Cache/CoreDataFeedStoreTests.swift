@@ -161,12 +161,6 @@ class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs, FailableFeedStoreSpecs
         XCTAssertEqual(existingObjects, [], "found orphaned objects in Core Data")
     }
     
-    func test_storeSideEffects_runSerially() throws {
-        let sut = try makeSUT()
-        
-        assertThatSideEffectsRunSerially(on: sut)
-    }
-    
 }
 
 // MARK: - Helpers

@@ -50,13 +50,6 @@ public final class CoreDataFeedStore {
     deinit {
         cleanUpReferencesToPersistentStores()
     }
-    
-    func performAsync(_ action: @escaping (NSManagedObjectContext) -> Void) {
-        let context = self.context
-        context.perform {
-            action(context)
-        }
-    }
 }
 
 extension Result where Failure == Error {
