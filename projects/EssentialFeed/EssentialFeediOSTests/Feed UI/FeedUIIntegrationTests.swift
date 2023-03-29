@@ -330,6 +330,14 @@ extension FeedUIIntegrationTests {
         }
         wait(for: [exp], timeout: 1.0)
     }
+    
+    func test_errorView_doesNotRenderErrorOnLoad() {
+        let (sut, _) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        
+        XCTAssertNil(sut.errorMessage)
+    }
 }
 
 // MARK: - Helpers
