@@ -26,6 +26,7 @@ public enum FeedUIComposer {
         let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
         let feedController = storyboard.instantiateInitialViewController() as! FeedViewController
         feedController.delegate = presentationAdapter
+        feedController.title = FeedPresenter.title
         
         let presenter = FeedPresenter(feedView: FeedViewAdapter(controller: feedController, imageLoader: imageLoader), loadingView: WeakRefVirtualProxy(feedController))
         presentationAdapter.presenter = presenter
