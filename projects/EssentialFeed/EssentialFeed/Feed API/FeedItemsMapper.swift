@@ -31,6 +31,9 @@ public final class FeedItemsMapper {
         case invalidData
     }
     
+    /// Input and output and synchronous here.
+    /// This doesn't know anything about infrastructure details, it's composed in the composition root to
+    /// infrastructure.
     public static func map(_ data: Data, from response: HTTPURLResponse) throws -> [FeedImage] {
         // We are decoding AND checking the status code here.
         // However, this is not a violation of the single responsibility principle because
