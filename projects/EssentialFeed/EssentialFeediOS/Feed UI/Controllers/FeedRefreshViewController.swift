@@ -7,34 +7,29 @@
 
 import UIKit
 
-/// Note: this is a "View Controller" because it's controlling a view.
-/// It doesn't necessarily have to be a view that's the entire viewport!
-/// Simple observation, but powerful!
-/// As long as the main view can communicate with this in a meaningful way, this is a perfectly valid object!
-///
-/// This view controller just binds the view with the view model, it's the "Binding" layer between ViewModel and View.
-/// All state management lives in the FeedViewModel, it's a platform-agnostic resuable component.
-final class FeedRefreshViewController: NSObject {
-    private(set) lazy var view: UIRefreshControl = binded(UIRefreshControl())
+final class FeedRefreshViewController: NSObject, FeedLoadingView {
+    private(set) lazy var view: UIRefreshControl = loadView()
     
-    private let viewModel: FeedViewModel
+    private let presenter: FeedPresenter
     
-    init(viewModel: FeedViewModel) {
-        self.viewModel = viewModel
+    init(presenter: FeedPresenter) {
+        self.presenter = presenter
+    }
+    
+    func display(isLoading: Bool) {
+        if isLoading {
+            view.beginRefreshing()
+        } else {
+            view.endRefreshing()
+        }
     }
     
     @objc func refresh() {
-        viewModel.loadFeed()
+        presenter.loadFeed()
     }
     
-    private func binded(_ view: UIRefreshControl) -> UIRefreshControl {
-        viewModel.onLoadingStateChange = { [weak view] isLoading in
-            if isLoading {
-                view?.beginRefreshing()
-            } else {
-                view?.endRefreshing()
-            }
-        }
+    private func loadView() -> UIRefreshControl {
+        let view = UIRefreshControl()
         view.addTarget(self, action: #selector(refresh), for: .valueChanged)
         return view
     }
