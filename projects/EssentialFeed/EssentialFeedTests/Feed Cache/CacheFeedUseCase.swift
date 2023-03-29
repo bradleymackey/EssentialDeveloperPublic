@@ -50,7 +50,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 
 extension CacheFeedUseCaseTests {
     
-    func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStore) {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStore) {
         let store = FeedStore()
         let sut = LocalFeedLoader(store: store)
         trackForMemoryLeaks(store, file: file, line: line)
@@ -58,7 +58,7 @@ extension CacheFeedUseCaseTests {
         return (sut, store)
     }
     
-    func uniqueItem() -> FeedItem {
+    private func uniqueItem() -> FeedItem {
         FeedItem(
             id: UUID(),
             description: "any description",
@@ -67,7 +67,7 @@ extension CacheFeedUseCaseTests {
         )
     }
     
-    func anyURL() -> URL {
+    private func anyURL() -> URL {
         URL(string: "https://google.com")!
     }
     
