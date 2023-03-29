@@ -29,8 +29,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         LocalFeedLoader(store: store, currentDate: Date.init)
     }()
     
-    private lazy var localImageLoader = LocalFeedImageDataLoader(store: store)
-    private lazy var remoteImageLoader = RemoteFeedImageDataLoader(client: httpClient)
     
     convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
         self.init()
@@ -74,12 +72,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func makeLocalImageLoaderWithRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
+        let localImageLoader = LocalFeedImageDataLoader(store: store)
         return localImageLoader
             .loadImageDataPublisher(from: url)
-            .fallback {
-                self.remoteImageLoader
-                    .loadImageDataPublisher(from: url)
-                    .caching(to: self.localImageLoader, using: url)
-            }
+            .fallback(to: { [httpClient] in
+                httpClient
+                    .getPublisher(url: url)
+                    .tryMap(FeedImageDataMapper.map)
+                    .caching(to: localImageLoader, using: url)
+            })
     }
 }
