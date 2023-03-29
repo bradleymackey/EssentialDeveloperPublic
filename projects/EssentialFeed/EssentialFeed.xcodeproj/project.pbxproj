@@ -23,6 +23,7 @@
 		1CBE7D0B2805A6D30096676E /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBE7D0A2805A6D30096676E /* HTTPClient.swift */; };
 		1CBE7D0D2805DF160096676E /* RemoteFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBE7D0C2805DF160096676E /* RemoteFeedLoader.swift */; };
 		1CCC42C3281B003700F77ACA /* CacheFeedUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCC42C2281B003700F77ACA /* CacheFeedUseCase.swift */; };
+		1CCC42C6281D486100F77ACA /* LocalFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCC42C5281D486100F77ACA /* LocalFeedLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		1CBE7D0A2805A6D30096676E /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		1CBE7D0C2805DF160096676E /* RemoteFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoader.swift; sourceTree = "<group>"; };
 		1CCC42C2281B003700F77ACA /* CacheFeedUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheFeedUseCase.swift; sourceTree = "<group>"; };
+		1CCC42C5281D486100F77ACA /* LocalFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				1CBE7CED280594230096676E /* EssentialFeed.h */,
+				1CCC42C4281D485100F77ACA /* Feed Cache */,
 				1C8B1E3F28082B85002EA167 /* Feed Feature */,
 				1C8B1E3E28082B7A002EA167 /* Feed API */,
 				1CBE7CEE280594230096676E /* EssentialFeed.docc */,
@@ -178,6 +181,14 @@
 			isa = PBXGroup;
 			children = (
 				1CCC42C2281B003700F77ACA /* CacheFeedUseCase.swift */,
+			);
+			path = "Feed Cache";
+			sourceTree = "<group>";
+		};
+		1CCC42C4281D485100F77ACA /* Feed Cache */ = {
+			isa = PBXGroup;
+			children = (
+				1CCC42C5281D486100F77ACA /* LocalFeedLoader.swift */,
 			);
 			path = "Feed Cache";
 			sourceTree = "<group>";
@@ -335,6 +346,7 @@
 				1CBE7D0B2805A6D30096676E /* HTTPClient.swift in Sources */,
 				1C8B1E3C28081F97002EA167 /* FeedItemsMapper.swift in Sources */,
 				1CBE7D0D2805DF160096676E /* RemoteFeedLoader.swift in Sources */,
+				1CCC42C6281D486100F77ACA /* LocalFeedLoader.swift in Sources */,
 				1CBE7CEF280594230096676E /* EssentialFeed.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
