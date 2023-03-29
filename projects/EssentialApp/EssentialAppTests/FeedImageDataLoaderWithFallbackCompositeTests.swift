@@ -88,8 +88,4 @@ extension FeedImageDataLoaderWithFallbackCompositeTests {
     private func uniqueImageData() -> Data {
         Data(UUID().uuidString.utf8)
     }
-    
-    private func anyURL() -> URL {
-        URL(string: "https://a-url.com")!
-    }
 }

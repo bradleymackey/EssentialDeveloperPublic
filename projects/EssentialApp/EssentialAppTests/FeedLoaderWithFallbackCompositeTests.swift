@@ -72,14 +72,6 @@ extension FeedLoaderWithFallbackCompositeTests {
         [FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())]
     }
     
-    private func anyURL() -> URL {
-        URL(string: "https://a-url.com")!
-    }
-    
-    private func anyNSError() -> NSError {
-        NSError(domain: "any", code: 101)
-    }
-    
     /// A stub just returns a pre-specified value.
     ///
     /// Stubs are much simpler than mocks or spys, but much more flexible, making them an easy
