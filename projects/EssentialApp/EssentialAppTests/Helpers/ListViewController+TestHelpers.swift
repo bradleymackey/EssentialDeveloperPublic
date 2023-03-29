@@ -24,6 +24,53 @@ extension ListViewController {
         refreshControl?.simulatePullToRefresh()
     }
     
+    var isShowingLoadingIndicator: Bool {
+        refreshControl?.isRefreshing == true
+    }
+    
+    var errorMessage: String? {
+        errorView.message
+    }
+    
+    func simulateErrorViewTap() {
+        errorView.simulateTap()
+    }
+    
+    func numberOfRows(in section: Int) -> Int {
+        tableView.numberOfSections > section ? tableView.numberOfRows(inSection: section) : 0
+    }
+    
+    func cell(row: Int, section: Int) -> UITableViewCell? {
+        guard numberOfRows(in: section) > row else {
+            return nil
+        }
+        let ds = tableView.dataSource
+        let index = IndexPath(row: row, section: section)
+        return ds?.tableView(tableView, cellForRowAt: index)
+    }
+}
+
+// MARK: - Feed
+
+extension ListViewController {
+    func numberOfRenderedFeedImageViews() -> Int {
+        numberOfRows(in: feedImagesSection)
+    }
+
+    func feedImageView(at row: Int) -> UITableViewCell? {
+        cell(row: row, section: feedImagesSection)
+    }
+
+    func renderedFeedImageData(at index: Int) -> Data? {
+        simulateFeedImageViewVisible(at: index).renderedImage
+    }
+    
+    func simulateTapOnFeedImage(at row: Int) {
+        let delegate = tableView.delegate
+        let indexPath = IndexPath(row: row, section: feedImagesSection)
+        delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+    }
+    
     @discardableResult
     func simulateFeedImageViewVisible(at row: Int) -> FeedImageCell {
         guard let cell = feedImageView(at: row) as? FeedImageCell else {
@@ -59,50 +106,17 @@ extension ListViewController {
         let index = IndexPath(row: row, section: feedImagesSection)
         ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [index])
     }
-    
-    var isShowingLoadingIndicator: Bool {
-        refreshControl?.isRefreshing == true
-    }
-    
-    func numberOfRenderedFeedImageViews() -> Int {
-        tableView.numberOfSections == 0 ? 0 : tableView.numberOfRows(inSection: feedImagesSection)
-    }
-    
-    func feedImageView(at row: Int) -> UITableViewCell? {
-        guard numberOfRenderedFeedImageViews() > row else {
-            return nil
-        }
-        let ds = tableView.dataSource
-        let index = IndexPath(row: row, section: feedImagesSection)
-        return ds?.tableView(tableView, cellForRowAt: index)
-    }
-    
+
     private var feedImagesSection: Int {
         0
     }
-    
-    func renderedFeedImageData(at index: Int) -> Data? {
-        simulateFeedImageViewVisible(at: index).renderedImage
-    }
-    
-    var errorMessage: String? {
-        errorView.message
-    }
-    
-    func simulateErrorViewTap() {
-        errorView.simulateTap()
-    }
-    
-    func simulateTapOnFeedImage(at row: Int) {
-        let delegate = tableView.delegate
-        let indexPath = IndexPath(row: row, section: feedImagesSection)
-        delegate?.tableView?(tableView, didSelectRowAt: indexPath)
-    }
 }
+
+// MARK: - Comments
 
 extension ListViewController {
     func numberOfRenderedComments() -> Int {
-        tableView.numberOfSections == 0 ? 0 : tableView.numberOfRows(inSection: commentsSection)
+        numberOfRows(in: commentsSection)
     }
     
     func commentMessage(at row: Int) -> String? {
@@ -118,12 +132,7 @@ extension ListViewController {
     }
     
     private func commentView(at row: Int) -> ImageCommentCell? {
-        guard numberOfRenderedComments() > row else {
-            return nil
-        }
-        let ds = tableView.dataSource
-        let index = IndexPath(row: row, section: commentsSection)
-        return ds?.tableView(tableView, cellForRowAt: index) as? ImageCommentCell
+        cell(row: row, section: commentsSection) as? ImageCommentCell
     }
     
     private var commentsSection: Int {
