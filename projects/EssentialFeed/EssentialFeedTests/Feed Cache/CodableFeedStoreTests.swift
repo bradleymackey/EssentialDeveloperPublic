@@ -67,13 +67,13 @@ final class CodableFeedStoreTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        try? FileManager.default.removeItem(at: testStoreURL())
+        setupEmptyStoreState()
     }
     
     override func tearDown() {
         super.tearDown()
         
-        try? FileManager.default.removeItem(at: testStoreURL())
+        undoStoreSideEffects()
     }
     
     func test_retrieve_deliversEmptyOnEmptyCache() {
@@ -155,4 +155,15 @@ extension CodableFeedStoreTests {
         ).first!.appendingPathComponent("\(Self.self).store")
     }
     
+    private func deleteStoreArtefact() {
+        try? FileManager.default.removeItem(at: testStoreURL())
+    }
+    
+    private func setupEmptyStoreState() {
+        deleteStoreArtefact()
+    }
+    
+    private func undoStoreSideEffects() {
+        deleteStoreArtefact()
+    }
 }
