@@ -11,6 +11,10 @@ import EssentialFeediOS
 
 extension FeedUIIntegrationTests {
     func assertThat(_ sut: FeedViewController, isRendering imageModels: [FeedImage], file: StaticString = #file, line: UInt = #line) {
+        // Table View may not reload immediately, so we need to force a reload.
+        sut.tableView.layoutIfNeeded()
+        RunLoop.main.run(until: Date())
+        
         let actualRendered = sut.numberOfRenderedFeedImageViews()
         guard actualRendered == imageModels.count else {
             return XCTFail("Expected to render \(imageModels.count), but rendered \(actualRendered) instead!", file: file, line: line)
