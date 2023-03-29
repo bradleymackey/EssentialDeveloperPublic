@@ -8,6 +8,7 @@
 import XCTest
 import EssentialFeed
 
+/// Tests that the cache inserts and deletes entries accordingly.
 final class CacheFeedUseCaseTests: XCTestCase {
     
     func test_init_doesNotMessageStoreUponCreation() {

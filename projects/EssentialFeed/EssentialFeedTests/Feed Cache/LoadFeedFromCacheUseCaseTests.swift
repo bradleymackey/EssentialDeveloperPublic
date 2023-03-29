@@ -8,6 +8,7 @@
 import XCTest
 import EssentialFeed
 
+/// Tests that the cache retrieves items without error.
 final class LoadFeedFromCacheUseCaseTests: XCTestCase {
     
     func test_init_doesNotMessageStoreUponCreation() {
