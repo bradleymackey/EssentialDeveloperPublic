@@ -27,14 +27,15 @@ class LoadResourcePresenterTests: XCTestCase {
         ])
     }
     
-    func test_didFinishLoadingFeed_displaysFeedAndStopsLoading() {
-        let (sut, view) = makeSUT()
-        let feed = uniqueFeed().models
+    func test_didFinishLoading_displaysResourceAndStopsLoading() {
+        let (sut, view) = makeSUT(mapper: { resource in
+            resource + " view model"
+        })
         
-        sut.didFinishLoadingFeed(with: feed)
+        sut.didFinishLoading(with: "resource")
         
         XCTAssertEqual(view.messages, [
-            .display(feed: feed),
+            .display(resourceViewModel: "resource view model"),
             .display(isLoading: false),
         ])
     }
@@ -56,22 +57,26 @@ class LoadResourcePresenterTests: XCTestCase {
 
 extension LoadResourcePresenterTests {
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LoadResourcePresenter, view: ViewSpy) {
+    private func makeSUT(mapper: @escaping LoadResourcePresenter.Mapper = { _ in "any" }, file: StaticString = #file, line: UInt = #line) -> (sut: LoadResourcePresenter, view: ViewSpy) {
         let view = ViewSpy()
-        let sut = LoadResourcePresenter(feedView: view, loadingView: view, errorView: view)
+        let sut = LoadResourcePresenter(resourceView: view, loadingView: view, errorView: view, mapper: mapper)
         trackForMemoryLeaks(view, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, view)
     }
     
-    private class ViewSpy: FeedErrorView, FeedLoadingView, FeedView {
+    private class ViewSpy: ResourceView, FeedErrorView, FeedLoadingView {
         enum Message: Hashable {
-            case display(feed: [FeedImage])
+            case display(resourceViewModel: String)
             case display(errorMessage: String?)
             case display(isLoading: Bool)
         }
         
         private(set) var messages = Set<Message>()
+        
+        func display(_ viewModel: String) {
+            messages.insert(.display(resourceViewModel: viewModel))
+        }
         
         func display(_ viewModel: FeedErrorViewModel) {
             messages.insert(.display(errorMessage: viewModel.message))
@@ -79,10 +84,6 @@ extension LoadResourcePresenterTests {
         
         func display(_ viewModel: FeedLoadingViewModel) {
             messages.insert(.display(isLoading: viewModel.isLoading))
-        }
-        
-        func display(_ viewModel: FeedViewModel) {
-            messages.insert(.display(feed: viewModel.feed))
         }
     }
     
