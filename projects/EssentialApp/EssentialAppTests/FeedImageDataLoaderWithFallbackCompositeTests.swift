@@ -44,7 +44,7 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
     func test_load_deliversPrimaryImageOnPrimarySuccess() {
         let primaryData = uniqueImageData()
         let fallbackData = uniqueImageData()
-        let sut = makeSUT(primaryResult: .success(primaryData), fallbackResult: .success(fallbackData))
+        let (sut, _, _) = makeSUT(primaryResult: .success(primaryData), fallbackResult: .success(fallbackData))
         
         let exp = expectation(description: "Wait for image data load")
         _ = sut.loadImageData(from: anyURL()) { result in
@@ -64,7 +64,7 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
     
     func test_load_deliversFallbackImageOnPrimaryFailure() {
         let fallbackData = uniqueImageData()
-        let sut = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .success(fallbackData))
+        let (sut, _, _) = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .success(fallbackData))
         
         let exp = expectation(description: "Wait for image data load")
         _ = sut.loadImageData(from: anyURL()) { result in
@@ -88,17 +88,17 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
 
 extension FeedImageDataLoaderWithFallbackCompositeTests {
     
-    private func makeSUT(primaryResult: FeedImageDataLoader.Result, fallbackResult: FeedImageDataLoader.Result, file: StaticString = #file, line: UInt = #line) -> FeedImageDataLoader {
-        let primaryLoader = ImageDataLoaderStub(result: primaryResult)
-        let fallbackLoader = ImageDataLoaderStub(result: fallbackResult)
+    private func makeSUT(primaryResult: FeedImageDataLoader.Result, fallbackResult: FeedImageDataLoader.Result, file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageDataLoader, primary: LoaderSpy, fallback: LoaderSpy) {
+        let primaryLoader = LoaderSpy(result: primaryResult)
+        let fallbackLoader = LoaderSpy(result: fallbackResult)
         let sut = FeedImageDataLoaderWithFallbackComposite(primary: primaryLoader, fallback: fallbackLoader)
         trackForMemoryLeaks(primaryLoader, file: file, line: line)
         trackForMemoryLeaks(fallbackLoader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
-        return sut
+        return (sut, primaryLoader, fallbackLoader)
     }
     
-    private class ImageDataLoaderStub: FeedImageDataLoader {
+    private class LoaderSpy: FeedImageDataLoader {
         private let result: FeedImageDataLoader.Result
         init(result: FeedImageDataLoader.Result) {
             self.result = result
