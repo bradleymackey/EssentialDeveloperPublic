@@ -47,10 +47,6 @@ public final class LocalFeedLoader {
             guard let self = self else { return }
             switch result {
             case let .failure(error):
-                // WARNING: retrives data AND deletes cache, this is
-                // a dangerous side-effect and is not very clear.
-                // We need to clarify this requirement in the use cases.
-                self.store.deleteCachedFeed { _ in }
                 completion(.failure(error))
             case let .found(feed, timestamp) where self.validate(timestamp):
                 completion(.success(feed.toModels()))
@@ -61,6 +57,11 @@ public final class LocalFeedLoader {
                 completion(.success([]))
             }
         }
+    }
+    
+    public func validateCache() {
+        store.retrieve { _ in }
+        store.deleteCachedFeed { _ in }
     }
     
     private let maxCacheAgeInDays = 7

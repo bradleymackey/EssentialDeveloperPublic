@@ -75,7 +75,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         })
     }
     
-    func test_load_deletesCacheOnRetrievalError() {
+    func test_load_hasNoSideEffectsOnRetrievalError() {
         let (sut, store) = makeSUT()
         let exp = expectation(description: "Wait for load")
         
@@ -83,7 +83,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         store.completeRetrieval(with: anyNSError())
         
         wait(for: [exp], timeout: 1.0)
-        XCTAssertEqual(store.recievedMessages, [.retrieve, .deleteCachedFeed])
+        XCTAssertEqual(store.recievedMessages, [.retrieve])
     }
     
     func test_load_doesNotDeleteCacheOnEmptyCache() {
