@@ -48,7 +48,7 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         XCTAssertTrue(fallbackLoader.requestedURLs.isEmpty, "Expected no URLs in fallback loader")
     }
     
-    func test_load_deliversPrimaryImageOnPrimarySuccess() {
+    func test_loadImageData_deliversPrimaryImageOnPrimarySuccess() {
         let primaryData = uniqueImageData()
         let fallbackData = uniqueImageData()
         let (sut, _, _) = makeSUT(primaryResult: .success(primaryData), fallbackResult: .success(fallbackData))
@@ -56,14 +56,14 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         expect(sut, url: anyURL(), toCompleteWith: .success(primaryData))
     }
     
-    func test_load_deliversFallbackImageOnPrimaryFailure() {
+    func test_loadImageData_deliversFallbackImageOnPrimaryFailure() {
         let fallbackData = uniqueImageData()
         let (sut, _, _) = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .success(fallbackData))
         
         expect(sut, url: anyURL(), toCompleteWith: .success(fallbackData))
     }
     
-    func test_load_primarySuccessRequestsDesiredURLFromPrimary() {
+    func test_loadImageData_primarySuccessRequestsDesiredURLFromPrimary() {
         let primaryData = uniqueImageData()
         let fallbackData = uniqueImageData()
         let url = anyURL()
@@ -75,7 +75,7 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         XCTAssertEqual(fallbackLoader.requestedURLs, [])
     }
     
-    func test_load_fallbackRequestsDesiredURLFromPrimaryThenSecondary() {
+    func test_loadImageData_fallbackRequestsDesiredURLFromPrimaryThenSecondary() {
         let fallbackData = uniqueImageData()
         let url = anyURL()
         let (sut, primaryLoader, fallbackLoader) = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .success(fallbackData))
@@ -86,7 +86,7 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         XCTAssertEqual(fallbackLoader.requestedURLs, [url])
     }
     
-    func test_load_deliversFailureOnBothPrimaryAndSecondaryLoaderFailure() {
+    func test_loadImageData_deliversFailureOnBothPrimaryAndSecondaryLoaderFailure() {
         let (sut, _, _) = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .failure(anyNSError()))
         
         expect(sut, url: anyURL(), toCompleteWith: .failure(anyNSError()))
