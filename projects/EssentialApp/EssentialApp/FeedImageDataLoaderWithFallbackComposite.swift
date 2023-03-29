@@ -8,6 +8,7 @@
 import Foundation
 import EssentialFeed
 
+@available(*, deprecated, message: "Use Combine for a universal abstraction")
 public final class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
     private let primary: FeedImageDataLoader
     private let fallback: FeedImageDataLoader

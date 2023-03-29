@@ -8,6 +8,7 @@
 import Foundation
 import EssentialFeed
 
+@available(*, deprecated, message: "Use Combine for a universal abstraction")
 public final class FeedImageDataLoaderCacheDecorator: FeedImageDataLoader {
     private let decoratee: FeedImageDataLoader
     private let cache: FeedImageDataCache
