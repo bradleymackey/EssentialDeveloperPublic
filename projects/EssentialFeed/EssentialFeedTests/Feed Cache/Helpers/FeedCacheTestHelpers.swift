@@ -39,6 +39,9 @@ extension Date {
     }
     
     private var feedCacheMaxAgeInDays: Int {
+        // easy to change without breaking clients or test methods
+        //
+        // strict with access control because we do not want clients depending on the exact value
         7
     }
 }
