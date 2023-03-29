@@ -7,12 +7,23 @@
 
 import EssentialFeed
 
+/// - Note: this is a ViewModel used in MVP, so it should have no state.
+/// It is used to send state updates via the abstraction for the view, `FeedLoadingView`.
+struct FeedLoadingViewModel {
+    let isLoading: Bool
+}
+
 protocol FeedLoadingView {
-    func display(isLoading: Bool)
+    func display(_ viewModel: FeedLoadingViewModel)
+}
+
+/// Note: ViewModel used by MVP, so no state.
+struct FeedViewModel {
+    let feed: [FeedImage]
 }
 
 protocol FeedView {
-    func display(feed: [FeedImage])
+    func display(_ viewModel: FeedViewModel)
 }
 
 final class FeedPresenter {
@@ -27,12 +38,12 @@ final class FeedPresenter {
     var loadingView: FeedLoadingView?
     
     func loadFeed() {
-        loadingView?.display(isLoading: true)
+        loadingView?.display(FeedLoadingViewModel(isLoading: true))
         feedLoader.load { [weak self] result in
             if let feed = try? result.get() {
-                self?.feedView?.display(feed: feed)
+                self?.feedView?.display(FeedViewModel(feed: feed))
             }
-            self?.loadingView?.display(isLoading: false)
+            self?.loadingView?.display(FeedLoadingViewModel(isLoading: false))
         }
     }
 }
