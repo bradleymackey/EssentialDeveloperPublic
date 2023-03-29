@@ -11,64 +11,6 @@ import XCTest
 // We test drive the implementation before implementing anything concrete.
 
 class LoadFromRemoteUseCaseTests: XCTestCase {
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-    
-    func test_init_doesNotRequestDataFromURL() {
-        let (_, client) = makeSUT()
-        
-        XCTAssertTrue(client.requestedURLs.isEmpty)
-    }
-    
-    func test_load_requestDataFromURL() {
-        let url = URL(string: "https://someurl.com")!
-        let (sut, client) = makeSUT(url: url)
-        sut.load { _ in }
-        
-        XCTAssertEqual(client.requestedURLs, [url])
-    }
-    
-    func test_loadTwice_requestDataFromURL() {
-        let url = URL(string: "https://someurl.com")!
-        let (sut, client) = makeSUT(url: url)
-        sut.load { _ in }
-        sut.load { _ in }
-        
-        XCTAssertEqual(client.requestedURLs, [url, url])
-    }
-    
-    // This error is not refactored to show the process of the design.
-    func test_load_deliversErrorOnClientError() {
-        // ARRANGE
-        let (sut, client) = makeSUT()
-        
-        // ACT
-        // (client and completions belongs to the 'act')
-        // (part of the tests)
-        var capturedResults = [RemoteFeedLoader.Result]()
-        sut.load(completion: { capturedResults.append($0) })
-        
-        // Complete after the load starts, making this code easy to
-        // read (load starts, then the HTTPClient completes after that)
-        //
-        // Structuring the test this way is true to how the code runs,
-        // from top to bottom - it doesn't require us to setup the error
-        // before we call `load`, which could get very confusing.
-        let clientError = NSError(domain: "Test", code: 0)
-        client.complete(with: clientError)
-        
-        // ASSERT
-        XCTAssertEqual(capturedResults.count, 1)
-        XCTAssertThrowsError(try capturedResults[0].get(), "Error state") { error in
-            XCTAssertEqual(error as! RemoteFeedLoader.Error, .connectivity)
-        }
-    }
-    
     func test_load_deliversErrorOnNon200Response() {
         let (sut, client) = makeSUT()
         
@@ -128,25 +70,7 @@ class LoadFromRemoteUseCaseTests: XCTestCase {
             client.complete(withStatusCode: 200, data: json)
         }
     }
-    
-    // This is self-documenting for the completion block "we are thinking about this behaviour"
-    // Need to think about this behaviour and how to handle it.
-    func test_load_doesNotDeliverResultsAfterSUTInstanceHasBeenDeallocated() {
-        let url = URL(string: "https://a-url.com")!
-        let client = HTTPClientSpy()
-        var sut: RemoteFeedLoader? = RemoteFeedLoader(url: url, client: client)
-        
-        var capturedResults = [RemoteFeedLoader.Result]()
-        sut?.load { capturedResults.append($0) }
-        
-        sut = nil
-        client.complete(withStatusCode: 200, data: makeFeedJSON([]))
-        
-        XCTAssertTrue(capturedResults.isEmpty)
-    }
-
 }
-
 
 // MARK: - Helpers
 

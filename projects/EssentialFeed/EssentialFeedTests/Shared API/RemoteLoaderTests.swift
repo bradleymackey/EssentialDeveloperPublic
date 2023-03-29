@@ -39,6 +39,12 @@ class RemoteLoaderTests: XCTestCase {
         var capturedResults = [SUT.Result]()
         sut.load(completion: { capturedResults.append($0) })
         
+        // Complete after the load starts, making this code easy to
+        // read (load starts, then the HTTPClient completes after that)
+        //
+        // Structuring the test this way is true to how the code runs,
+        // from top to bottom - it doesn't require us to setup the error
+        // before we call `load`, which could get very confusing.
         let clientError = NSError(domain: "Test", code: 0)
         client.complete(with: clientError)
         
@@ -69,6 +75,8 @@ class RemoteLoaderTests: XCTestCase {
         }
     }
     
+    // This is self-documenting for the completion block "we are thinking about this behaviour"
+    // Need to think about this behaviour and how to handle it.
     func test_load_doesNotDeliverResultsAfterSUTInstanceHasBeenDeallocated() {
         let url = URL(string: "https://a-url.com")!
         let client = HTTPClientSpy()
