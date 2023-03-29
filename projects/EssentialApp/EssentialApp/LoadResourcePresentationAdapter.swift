@@ -44,3 +44,18 @@ extension LoadResourcePresentationAdapter: FeedViewControllerDelegate {
         loadResource()
     }
 }
+
+extension LoadResourcePresentationAdapter: FeedImageCellControllerDelegate {
+    func didCreatePlaceholder() {
+        presenter?.didStartLoading()
+    }
+    
+    func didRequestImage() {
+        loadResource()
+    }
+    
+    func didCancelImageRequest() {
+        cancellable?.cancel()
+        cancellable = nil
+    }
+}
