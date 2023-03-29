@@ -69,13 +69,13 @@ extension FeedAcceptanceTests {
     private func launch(
         httpClient: HTTPClientStub = .offline,
         store: InMemoryFeedStore = .empty
-    ) throws -> FeedViewController {
+    ) throws -> ListViewController {
         let sut = SceneDelegate(httpClient: httpClient, store: store)
         sut.window = UIWindow()
         sut.configureWindow()
         
         let nav = sut.window?.rootViewController as? UINavigationController
-        let feed = try XCTUnwrap(nav?.topViewController as? FeedViewController)
+        let feed = try XCTUnwrap(nav?.topViewController as? ListViewController)
         return feed
     }
     

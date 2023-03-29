@@ -8,7 +8,7 @@
 import UIKit
 import EssentialFeediOS
 
-extension FeedViewController {
+extension ListViewController {
     /// The fact that the user uses a `refreshControl` is an implementation detail.
     /// We can hide it from the tests using a method that just abstracts over some
     /// feed reload action, which can easily change/update later.

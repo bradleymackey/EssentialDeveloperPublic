@@ -19,7 +19,7 @@ public protocol CellController {
     func willDisplay()
 }
 
-public final class FeedViewController: UITableViewController, ResourceLoadingView, ResourceErrorView {
+public final class ListViewController: UITableViewController, ResourceLoadingView, ResourceErrorView {
     public var delegate: FeedViewControllerDelegate?
     @IBOutlet private(set) public var errorView: ErrorView?
     
@@ -91,7 +91,7 @@ public final class FeedViewController: UITableViewController, ResourceLoadingVie
     }
 }
 
-extension FeedViewController: UITableViewDataSourcePrefetching {
+extension ListViewController: UITableViewDataSourcePrefetching {
     public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             let cellController = cellController(forRowAt: indexPath)
