@@ -1,5 +1,5 @@
 //
-//  FeedLoaderPresentationAdapter.swift
+//  LoadResourcePresentationAdapter.swift
 //  EssentialFeediOS
 //
 //  Created by Bradley Mackey on 21/02/2023.
@@ -10,23 +10,23 @@ import Foundation
 import EssentialFeed
 import EssentialFeediOS
 
-final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
-    private let feedLoader: () -> AnyPublisher<[FeedImage], Error>
+final class LoadResourcePresentationAdapter<Resource, View: ResourceView> {
+    private let loader: () -> AnyPublisher<Resource, Error>
     private var cancellable: AnyCancellable?
     /// This is only optional to break a circular dependency.
     /// It's fine though, because this is at the composition layer.
     /// We're not leaking this composition detail into the adapters.
     ///
     /// (Constructor injection should be preferred whereever possible though!)
-    var presenter: LoadResourcePresenter<[FeedImage], FeedViewAdapter>?
+    var presenter: LoadResourcePresenter<Resource, View>?
     
-    init(feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>) {
-        self.feedLoader = feedLoader
+    init(loader: @escaping () -> AnyPublisher<Resource, Error>) {
+        self.loader = loader
     }
     
-    func didRequestFeedRefresh() {
+    func loadResource() {
         presenter?.didStartLoading()
-        cancellable = feedLoader().sink { [weak self] completion in
+        cancellable = loader().sink { [weak self] completion in
             switch completion {
             case .finished:
                 break
@@ -36,5 +36,11 @@ final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
         } receiveValue: { [weak self] feed in
             self?.presenter?.didFinishLoading(with: feed)
         }
+    }
+}
+
+extension LoadResourcePresentationAdapter: FeedViewControllerDelegate {
+    func didRequestFeedRefresh() {
+        loadResource()
     }
 }
