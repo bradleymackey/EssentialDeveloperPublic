@@ -154,53 +154,6 @@ class LoadFromRemoteUseCaseTests: XCTestCase {
 
 extension LoadFromRemoteUseCaseTests {
     
-    /// Move the test logic to a test type - the client spy.
-    /// this mimicks the behaviour of the parent without having to actually make
-    /// a network request.
-    ///
-    /// The `get` method will add a closure waiting to be completed.
-    /// Then, some time later, you can `complete` the closure and the
-    /// closure will be called with the provided update.
-    ///
-    /// We want to avoid 'stubbing' in this spy, to keep it's intent clear.
-    /// For example, adding an `error` optional property that would always return an error within `get` would be stubbing.
-    /// It also makes the flow of our program confusing because we would have to set the stubbed error before `get` is called, breaking the natural flow of our program and confusing us as developers.
-    /// We only want the spy to capture values, then we can test them after.
-    /// Capturing the values is more simple.
-    class HTTPClientSpy: HTTPClient {
-        private struct Task: HTTPClientTask {
-            func cancel() { }
-        }
-        private var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
-        
-        var requestedURLs: [URL] {
-            messages.map { $0.url }
-        }
-        
-        // ...get appends to the messages with a closure that
-        // is waiting to be completed...
-        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
-            messages.append((url, completion))
-            return Task()
-        }
-        
-        // ...complete methods will complete the response by calling
-        // the specified closure
-        func complete(with error: Error, at index: Int = 0) {
-            messages[index].completion(.failure(error))
-        }
-        
-        func complete(withStatusCode statusCode: Int, data: Data, at index: Int = 0) {
-            let response = HTTPURLResponse(
-                url: requestedURLs[index],
-                statusCode: statusCode,
-                httpVersion: nil,
-                headerFields: nil
-            )!
-            messages[index].completion(.success((data, response)))
-        }
-    }
-    
     private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedLoader, client: HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(url: url, client: client)
