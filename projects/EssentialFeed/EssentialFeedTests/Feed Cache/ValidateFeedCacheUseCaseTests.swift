@@ -62,37 +62,4 @@ extension ValidateFeedCacheUseCaseTests {
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, store)
     }
-    
-    private func anyNSError() -> NSError {
-        NSError(domain: "domain", code: 1)
-    }
-    
-    private func uniqueImage() -> FeedImage {
-        FeedImage(
-            id: UUID(),
-            description: "any description",
-            location: "any location",
-            url: anyURL()
-        )
-    }
-    
-    private func uniqueFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
-        let items = [uniqueImage(), uniqueImage()]
-        let local = items.map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url) }
-        return (items, local)
-    }
-    
-    private func anyURL() -> URL {
-        URL(string: "https://google.com")!
-    }
-}
-
-private extension Date {
-    func adding(days: Int) -> Date {
-        Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
-    }
-    
-    func adding(seconds: TimeInterval) -> Date {
-        self + seconds
-    }
 }
