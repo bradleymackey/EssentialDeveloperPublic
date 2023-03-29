@@ -24,7 +24,7 @@ public enum CommentsUIComposer {
     private typealias CommentsPresentationAdapter = LoadResourcePresentationAdapter<[ImageComment], CommentsViewAdapter>
     
     public static func commentsComposedWith(commentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>) -> ListViewController {
-        let presentationAdapter = CommentsPresentationAdapter(loader: { commentsLoader().dispatchOnMainQueue() })
+        let presentationAdapter = CommentsPresentationAdapter(loader: commentsLoader)
         
         let controller = makeCommentsController(title: ImageCommentsPresenter.title)
         controller.onRefresh = presentationAdapter.loadResource

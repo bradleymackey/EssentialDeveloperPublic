@@ -29,7 +29,7 @@ public enum FeedUIComposer {
         imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
         selection: @escaping (FeedImage) -> Void = { _ in }
     ) -> ListViewController {
-        let presentationAdapter = FeedPresentationAdapter(loader: { feedLoader().dispatchOnMainQueue() })
+        let presentationAdapter = FeedPresentationAdapter(loader: feedLoader)
         
         let feedController = ListViewController.makeWith(title: FeedPresenter.title)
         feedController.onRefresh = presentationAdapter.loadResource
