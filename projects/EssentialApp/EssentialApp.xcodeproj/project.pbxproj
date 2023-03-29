@@ -21,6 +21,7 @@
 		1CF0B24A29B5E85700996609 /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF0B24729B5E85700996609 /* EssentialFeediOS.framework */; };
 		1CF0B24B29B5E85700996609 /* EssentialFeediOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF0B24729B5E85700996609 /* EssentialFeediOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1CF0B24E29B5EFE700996609 /* FeedLoaderWithFallbackCompositeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CF0B24D29B5EFE700996609 /* FeedLoaderWithFallbackCompositeTests.swift */; };
+		1CF0B25029B5F6A200996609 /* FeedLoaderWithFallbackComposite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CF0B24F29B5F6A200996609 /* FeedLoaderWithFallbackComposite.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,7 @@
 		1CF0B24629B5E85700996609 /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CF0B24729B5E85700996609 /* EssentialFeediOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeediOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CF0B24D29B5EFE700996609 /* FeedLoaderWithFallbackCompositeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderWithFallbackCompositeTests.swift; sourceTree = "<group>"; };
+		1CF0B24F29B5F6A200996609 /* FeedLoaderWithFallbackComposite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderWithFallbackComposite.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +130,7 @@
 				1C7E670A29B5E6690089F3C9 /* AppDelegate.swift */,
 				1C7E670C29B5E6690089F3C9 /* SceneDelegate.swift */,
 				1C7E670E29B5E6690089F3C9 /* ViewController.swift */,
+				1CF0B24F29B5F6A200996609 /* FeedLoaderWithFallbackComposite.swift */,
 				1C7E671029B5E6690089F3C9 /* Main.storyboard */,
 				1C7E671329B5E66A0089F3C9 /* Assets.xcassets */,
 				1C7E671529B5E66A0089F3C9 /* LaunchScreen.storyboard */,
@@ -297,6 +300,7 @@
 			files = (
 				1C7E670F29B5E6690089F3C9 /* ViewController.swift in Sources */,
 				1C7E670B29B5E6690089F3C9 /* AppDelegate.swift in Sources */,
+				1CF0B25029B5F6A200996609 /* FeedLoaderWithFallbackComposite.swift in Sources */,
 				1C7E670D29B5E6690089F3C9 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
