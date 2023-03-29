@@ -56,24 +56,10 @@ class URLSessionHTTPClientTests: XCTestCase {
     
     func test_getFromURL_failsOnRequestError() {
         let expectedError = NSError(domain: "any error", code: 1)
-        URLProtocolStub.stub(data: nil, response: nil, error: expectedError)
-        let sut = makeSUT()
+        let recievedError = resultErrorFor(data: nil, response: nil, error: expectedError) as NSError?
         
-        let exp = expectation(description: "Wait for completion block")
-        sut.get(from: anyURL()) { result in
-            switch result {
-            case let .failure(error as NSError):
-                XCTAssertEqual(error.domain, expectedError.domain)
-                XCTAssertEqual(error.code, expectedError.code)
-            default:
-                XCTFail("Expected failure with \(expectedError), got \(result) instead")
-            }
-            
-            exp.fulfill()
-            
-        }
-        
-        wait(for: [exp], timeout: 1)
+        XCTAssertEqual(recievedError?.domain, expectedError.domain)
+        XCTAssertEqual(recievedError?.code, expectedError.code)
     }
     
     // MARK: - Helpers
@@ -83,6 +69,25 @@ class URLSessionHTTPClientTests: XCTestCase {
         let sut = URLSessionHTTPClient()
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+    
+    private func resultErrorFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> Error? {
+        URLProtocolStub.stub(data: data, response: response, error: error)
+        
+        let exp = expectation(description: "Wait for completion")
+        var recievedError: Error?
+        makeSUT(file: file, line: line).get(from: anyURL()) { result in
+            switch result {
+            case let .failure(error):
+                recievedError = error
+            default:
+                XCTFail("Expected failure, got \(result)", file: file, line: line)
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        return recievedError
     }
     
     private func anyURL() -> URL {
