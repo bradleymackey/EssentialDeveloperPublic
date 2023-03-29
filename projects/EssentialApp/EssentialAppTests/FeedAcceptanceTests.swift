@@ -18,25 +18,25 @@ final class FeedAcceptanceTests: XCTestCase {
     func test_onLaunch_displaysRemoteFeedWhenCustomerHasConnectivity() throws {
         let feed = try launch(httpClient: .online(stub: response), store: .empty)
         
-        XCTAssertEqual(feed.numberOfRenderedFeedImageViews(), 4)
-        for i in 0..<4 {
-            XCTAssertEqual(feed.renderedFeedImageData(at: i), makeImageData())
-        }
+        XCTAssertEqual(feed.numberOfRenderedFeedImageViews(), 3)
+        XCTAssertEqual(feed.renderedFeedImageData(at: 0), makeImageData0())
+        XCTAssertEqual(feed.renderedFeedImageData(at: 1), makeImageData1())
+        XCTAssertEqual(feed.renderedFeedImageData(at: 2), makeImageData2())
     }
     
     func test_onLaunch_displaysCachedRemoteFeedWhenCustomerHasNoConnectivity() throws {
         let sharedStore = InMemoryFeedStore.empty
         let onlineFeed = try launch(httpClient: .online(stub: response), store: sharedStore)
-        for i in 0..<4 {
+        for i in 0..<3 {
             onlineFeed.simulateFeedImageViewVisible(at: i)
         }
         
         let offlineFeed = try launch(httpClient: .offline, store: sharedStore)
         
-        XCTAssertEqual(offlineFeed.numberOfRenderedFeedImageViews(), 4)
-        for i in 0..<4 {
-            XCTAssertEqual(offlineFeed.renderedFeedImageData(at: i), makeImageData())
-        }
+        XCTAssertEqual(offlineFeed.numberOfRenderedFeedImageViews(), 3)
+        XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 0), makeImageData0())
+        XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 1), makeImageData1())
+        XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 2), makeImageData2())
     }
     
     func test_onLaunch_displaysEmptyFeedWhenCustomerHasNoConnectivityAndNoCache() throws {
@@ -181,8 +181,9 @@ extension FeedAcceptanceTests {
     
     private func makeData(for url: URL) -> Data {
         switch url.path {
-        case "/image-1", "/image-2", "/image-3", "/image-4":
-            return makeImageData()
+        case "/image-0": return makeImageData0()
+        case "/image-1": return makeImageData1()
+        case "/image-2": return makeImageData2()
             
         case "/essential-feed/v1/feed":
             return makeFeedData()
@@ -195,16 +196,23 @@ extension FeedAcceptanceTests {
         }
     }
     
-    private func makeImageData() -> Data {
+    private func makeImageData0() -> Data {
         UIImage.make(withColor: .red).pngData()!
+    }
+    
+    private func makeImageData1() -> Data {
+        UIImage.make(withColor: .blue).pngData()!
+    }
+    
+    private func makeImageData2() -> Data {
+        UIImage.make(withColor: .green).pngData()!
     }
     
     private func makeFeedData() -> Data {
         return try! JSONSerialization.data(withJSONObject: ["items": [
-            ["id": "2AB2AE66-A4B7-4A16-B374-51BBAC8DB086", "image": "http://feed.com/image-1"],
-            ["id": "A28F5FE3-27A7-44E9-8DF5-53742D0E4A5A", "image": "http://feed.com/image-2"],
-            ["id": "43502EAB-F2BA-4327-B714-5853A8F356D1", "image": "http://feed.com/image-3"],
-            ["id": "14E89DAE-8B2B-48B8-8FB1-28C816414BB9", "image": "http://feed.com/image-4"],
+            ["id": "2AB2AE66-A4B7-4A16-B374-51BBAC8DB086", "image": "http://feed.com/image-0"],
+            ["id": "A28F5FE3-27A7-44E9-8DF5-53742D0E4A5A", "image": "http://feed.com/image-1"],
+            ["id": "43502EAB-F2BA-4327-B714-5853A8F356D1", "image": "http://feed.com/image-2"],
         ]])
     }
     
