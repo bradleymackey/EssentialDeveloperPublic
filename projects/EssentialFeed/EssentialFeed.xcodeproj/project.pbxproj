@@ -516,12 +516,12 @@
 				1CBE7CED280594230096676E /* EssentialFeed.h */,
 				1CDF66AB29CF6D5E0070A6A0 /* Shared API Infra */,
 				1CDF66AA29CF6D570070A6A0 /* Shared API */,
-				1CDF66B129CF6E4E0070A6A0 /* Image Comments API */,
-				1CDF66A629CF64640070A6A0 /* Image Comments Feature */,
 				1C4CDB3429AF744B00963CDD /* Feed Presentation */,
 				1CCC42C4281D485100F77ACA /* Feed Cache */,
 				1C8B1E3F28082B85002EA167 /* Feed Feature */,
 				1C8B1E3E28082B7A002EA167 /* Feed API */,
+				1CDF66B129CF6E4E0070A6A0 /* Image Comments API */,
+				1CDF66A629CF64640070A6A0 /* Image Comments Feature */,
 				1CBE7CEE280594230096676E /* EssentialFeed.docc */,
 			);
 			path = EssentialFeed;
@@ -530,13 +530,13 @@
 		1CBE7CF8280594230096676E /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
-				1CDF66B229CF6E660070A6A0 /* Image Comments API */,
 				1CDF66AE29CF6DE20070A6A0 /* Shared API */,
 				1CDF66AD29CF6DB60070A6A0 /* Shared API Infra */,
 				1C4CDB2B29AF6CE800963CDD /* Feed Presentation */,
 				1C8B1E422808C5BD002EA167 /* Helpers */,
 				1CCC42C1281B002500F77ACA /* Feed Cache */,
 				1C8B1E3D28082B69002EA167 /* Feed API */,
+				1CDF66B229CF6E660070A6A0 /* Image Comments API */,
 			);
 			path = EssentialFeedTests;
 			sourceTree = "<group>";
