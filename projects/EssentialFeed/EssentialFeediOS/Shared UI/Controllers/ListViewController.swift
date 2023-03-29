@@ -15,6 +15,12 @@ public protocol CellController {
     func willDisplay()
 }
 
+public extension CellController {
+    func preload() {}
+    func cancelLoad() {}
+    func willDisplay() {}
+}
+
 public final class ListViewController: UITableViewController, ResourceLoadingView, ResourceErrorView {
     @IBOutlet private(set) public var errorView: ErrorView?
     
