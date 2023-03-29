@@ -32,6 +32,7 @@
 		1C4119A329A4DE3B00D58811 /* Feed.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1C4119A529A4DE3B00D58811 /* Feed.strings */; };
 		1C4119A929A4DEB700D58811 /* FeedLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4119A829A4DEB600D58811 /* FeedLocalizationTests.swift */; };
 		1C4CDB2529AF6A6200963CDD /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4CDB2429AF6A6200963CDD /* ErrorView.swift */; };
+		1C4CDB2729AF6B9500963CDD /* FeedErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4CDB2629AF6B9500963CDD /* FeedErrorViewModel.swift */; };
 		1C4E66642824661D0010117F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1C4E66632824661D0010117F /* README.md */; };
 		1C4E6666282662380010117F /* ValidateFeedCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4E6665282662380010117F /* ValidateFeedCacheUseCaseTests.swift */; };
 		1C4E6668282665220010117F /* FeedCacheTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4E6667282665220010117F /* FeedCacheTestHelpers.swift */; };
@@ -170,6 +171,7 @@
 		1C4119A629A4DE6400D58811 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Feed.strings"; sourceTree = "<group>"; };
 		1C4119A829A4DEB600D58811 /* FeedLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLocalizationTests.swift; sourceTree = "<group>"; };
 		1C4CDB2429AF6A6200963CDD /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		1C4CDB2629AF6B9500963CDD /* FeedErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedErrorViewModel.swift; sourceTree = "<group>"; };
 		1C4E66632824661D0010117F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1C4E6665282662380010117F /* ValidateFeedCacheUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateFeedCacheUseCaseTests.swift; sourceTree = "<group>"; };
 		1C4E6667282665220010117F /* FeedCacheTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCacheTestHelpers.swift; sourceTree = "<group>"; };
@@ -392,6 +394,7 @@
 				1CB948D5299FB05700518302 /* FeedImageViewModel.swift */,
 				1CAA8AF829A1702C005732B7 /* FeedImagePresenter.swift */,
 				1CAA8AFA29A1AC3D005732B7 /* FeedViewModel.swift */,
+				1C4CDB2629AF6B9500963CDD /* FeedErrorViewModel.swift */,
 				1CAA8AFC29A1AC43005732B7 /* FeedLoadingViewModel.swift */,
 				1C4119A529A4DE3B00D58811 /* Feed.strings */,
 			);
@@ -829,6 +832,7 @@
 				1CB948CA299EE22000518302 /* FeedImageDataLoader.swift in Sources */,
 				1C4FC3F829A56F2D0063B0A9 /* MainQueueDispatchDecorator.swift in Sources */,
 				1C4FC40029A570030063B0A9 /* WeakRefVirtualProxy.swift in Sources */,
+				1C4CDB2729AF6B9500963CDD /* FeedErrorViewModel.swift in Sources */,
 				1CAA8B0529A280D6005732B7 /* UIImageView+Animation.swift in Sources */,
 				1CB948D1299F8D9B00518302 /* FeedUIComposer.swift in Sources */,
 				1CAA8AFB29A1AC3D005732B7 /* FeedViewModel.swift in Sources */,
