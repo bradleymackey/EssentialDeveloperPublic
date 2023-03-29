@@ -59,6 +59,13 @@ class RemoteFeedLoaderTests: XCTestCase {
         // (part of the tests)
         var capturedErrors = [RemoteFeedLoader.Error]()
         sut.load(completion: { capturedErrors.append($0) })
+        
+        // Complete after the load starts, making this code easy to
+        // read (load starts, then the HTTPClient completes after that)
+        //
+        // Structuring the test this way is true to how the code runs,
+        // from top to bottom - it doesn't require us to setup the error
+        // before we call `load`, which could get very confusing.
         let clientError = NSError(domain: "Test", code: 0)
         client.complete(with: clientError)
         
@@ -71,6 +78,8 @@ class RemoteFeedLoaderTests: XCTestCase {
         let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(url: url, client: client)
         
+        // Having a range of samples is usually good enough.
+        // This tests a variety of condiditions without going overboard.
         let samples = [199, 201, 300, 400, 500]
         
         samples.enumerated().forEach { index, code in
@@ -91,6 +100,10 @@ extension RemoteFeedLoaderTests {
     /// Move the test logic to a test type - the client spy.
     /// this mimicks the behaviour of the parent without having to actually make
     /// a network request.
+    ///
+    /// The `get` method will add a closure waiting to be completed.
+    /// Then, some time later, you can `complete` the closure and the
+    /// closure will be called with the provided update.
     class HTTPClientSpy: HTTPClient {
         private var messages = [(url: URL, completion: (HTTPClientResult) -> Void)]()
         
@@ -98,10 +111,14 @@ extension RemoteFeedLoaderTests {
             messages.map { $0.url }
         }
         
+        // ...get appends to the messages with a closure that
+        // is waiting to be completed...
         func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void) {
             messages.append((url, completion))
         }
         
+        // ...complete methods will complete the response by calling
+        // the specified closure
         func complete(with error: Error, at index: Int = 0) {
             messages[index].completion(.failure(error))
         }
