@@ -13,7 +13,8 @@ public protocol FeedImageDataLoaderTask {
 }
 
 public protocol FeedImageDataLoader {
-    func loadImageData(from url: URL) -> FeedImageDataLoaderTask
+    typealias Result = Swift.Result<Data, Error>
+    func loadImageData(from url: URL, completion: @escaping (Result) -> Void) -> FeedImageDataLoaderTask
 }
 
 final public class FeedViewController: UITableViewController {
@@ -66,8 +67,12 @@ final public class FeedViewController: UITableViewController {
     }
     
     public override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let cell = cell as? FeedImageCell else { fatalError("Unknown cell type") }
+        cell.feedImageContainer.startShimmering()
         let cellModel = tableModel[indexPath.row]
-        tasks[indexPath] = imageLoader?.loadImageData(from: cellModel.url)
+        tasks[indexPath] = imageLoader?.loadImageData(from: cellModel.url) { [weak cell] result in
+            cell?.feedImageContainer.stopShimmering()
+        }
     }
     
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
