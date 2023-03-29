@@ -26,6 +26,7 @@
 		1CCC42C6281D486100F77ACA /* LocalFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCC42C5281D486100F77ACA /* LocalFeedLoader.swift */; };
 		1CCC42C8281D48DE00F77ACA /* FeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCC42C7281D48DE00F77ACA /* FeedStore.swift */; };
 		1CCC42CA281D955600F77ACA /* RemoteFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCC42C9281D955600F77ACA /* RemoteFeedItem.swift */; };
+		1CCC42CC281D958F00F77ACA /* LocalFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCC42CB281D958F00F77ACA /* LocalFeedItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 		1CCC42C5281D486100F77ACA /* LocalFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedLoader.swift; sourceTree = "<group>"; };
 		1CCC42C7281D48DE00F77ACA /* FeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStore.swift; sourceTree = "<group>"; };
 		1CCC42C9281D955600F77ACA /* RemoteFeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedItem.swift; sourceTree = "<group>"; };
+		1CCC42CB281D958F00F77ACA /* LocalFeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +197,7 @@
 			children = (
 				1CCC42C5281D486100F77ACA /* LocalFeedLoader.swift */,
 				1CCC42C7281D48DE00F77ACA /* FeedStore.swift */,
+				1CCC42CB281D958F00F77ACA /* LocalFeedItem.swift */,
 			);
 			path = "Feed Cache";
 			sourceTree = "<group>";
@@ -346,6 +349,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CCC42CC281D958F00F77ACA /* LocalFeedItem.swift in Sources */,
 				1CCC42C8281D48DE00F77ACA /* FeedStore.swift in Sources */,
 				1C8B1E462808D3FD002EA167 /* URLSessionHTTPClient.swift in Sources */,
 				1CBE7D07280594710096676E /* FeedLoader.swift in Sources */,
