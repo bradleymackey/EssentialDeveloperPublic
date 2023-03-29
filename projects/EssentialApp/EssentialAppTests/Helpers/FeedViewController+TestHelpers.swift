@@ -9,6 +9,14 @@ import UIKit
 import EssentialFeediOS
 
 extension ListViewController {
+//    public override func loadViewIfNeeded() {
+//        super.loadViewIfNeeded()
+//
+//        Not needed because we use willDisplay to render images
+//        This is a technique to prevent images loading ahead of time because there's not enough space
+//        tableView.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
+//    }
+    
     /// The fact that the user uses a `refreshControl` is an implementation detail.
     /// We can hide it from the tests using a method that just abstracts over some
     /// feed reload action, which can easily change/update later.
@@ -57,7 +65,7 @@ extension ListViewController {
     }
     
     func numberOfRenderedFeedImageViews() -> Int {
-        tableView.numberOfRows(inSection: feedImagesSection)
+        tableView.numberOfSections == 0 ? 0 : tableView.numberOfRows(inSection: feedImagesSection)
     }
     
     func feedImageView(at row: Int) -> UITableViewCell? {

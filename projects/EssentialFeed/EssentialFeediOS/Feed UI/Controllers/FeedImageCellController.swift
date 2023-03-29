@@ -54,6 +54,8 @@ extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, U
     }
     
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        // DO NOT call this in cell creation, as the cell may be created far ahead of time
+        // Therefore, we should only request the image when the cell is actually visible.
         delegate.didRequestImage()
     }
     
