@@ -162,12 +162,15 @@ extension FeedAcceptanceTests {
     }
     
     private func makeData(for url: URL) -> Data {
-        switch url.absoluteString {
-        case "http://image.com":
+        switch url.path {
+        case "/image-1", "/image-2", "/image-3", "/image-4":
             return makeImageData()
             
-        default:
+        case "/essential-feed/v1/feed":
             return makeFeedData()
+            
+        default:
+            return Data()
         }
     }
     
@@ -177,10 +180,10 @@ extension FeedAcceptanceTests {
     
     private func makeFeedData() -> Data {
         return try! JSONSerialization.data(withJSONObject: ["items": [
-            ["id": UUID().uuidString, "image": "http://image.com"],
-            ["id": UUID().uuidString, "image": "http://image.com"],
-            ["id": UUID().uuidString, "image": "http://image.com"],
-            ["id": UUID().uuidString, "image": "http://image.com"],
+            ["id": "2AB2AE66-A4B7-4A16-B374-51BBAC8DB086", "image": "http://feed.com/image-1"],
+            ["id": "A28F5FE3-27A7-44E9-8DF5-53742D0E4A5A", "image": "http://feed.com/image-2"],
+            ["id": "43502EAB-F2BA-4327-B714-5853A8F356D1", "image": "http://feed.com/image-3"],
+            ["id": "14E89DAE-8B2B-48B8-8FB1-28C816414BB9", "image": "http://feed.com/image-4"],
         ]])
     }
     
