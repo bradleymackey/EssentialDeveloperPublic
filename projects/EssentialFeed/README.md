@@ -115,13 +115,11 @@ Given the customer doesn't have connectivity
 
 #### Retrieval error course (sad path):
 
-1. System deletes cache.
-2. System delivers error.
+1. System delivers error.
 
 #### Expired cache course (sad path):
 
-1. System deletes cache.
-2. System delivers no feed images.
+1. System delivers no feed images.
 
 #### Empty cache course (sad path):
 
@@ -156,6 +154,9 @@ Given the customer doesn't have connectivity
 ---
 
 ### Validate Feed Cache Use Case
+
+This is separated from the "Load Feed From Cache Use Case" to ensure that we are correctly enforcing CQS.
+This is a better practice for development, as we separate the concerns from the loading from cache (and query) and the deleting of the cache (a command).
 
 #### Primary course:
 
