@@ -583,7 +583,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bradleymackey.EssentialFeedCacheIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -602,7 +602,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bradleymackey.EssentialFeedCacheIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
