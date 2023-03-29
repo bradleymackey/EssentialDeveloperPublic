@@ -9,7 +9,7 @@ import XCTest
 import EssentialFeed
 import EssentialApp
 
-class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
+class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase, FeedImageDataLoaderTestCase {
     
     func test_init_doesNotLoadImageData() {
         let (_, primaryLoader, fallbackLoader) = makeSUT()
@@ -22,7 +22,7 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         let primaryData = uniqueImageData()
         let (sut, primaryLoader, _) = makeSUT()
         
-        expect(sut, url: anyURL(), toCompleteWith: .success(primaryData)) {
+        expect(sut, toCompleteWith: .success(primaryData)) {
             primaryLoader.complete(with: primaryData)
         }
     }
@@ -42,7 +42,7 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         let fallbackData = uniqueImageData()
         let (sut, primaryLoader, fallbackLoader) = makeSUT()
         
-        expect(sut, url: anyURL(), toCompleteWith: .success(fallbackData)) {
+        expect(sut, toCompleteWith: .success(fallbackData)) {
             primaryLoader.complete(with: anyNSError())
             fallbackLoader.complete(with: fallbackData)
         }
@@ -88,7 +88,7 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
     func test_loadImageData_deliversFailureOnBothPrimaryAndSecondaryLoaderFailure() {
         let (sut, primaryLoader, fallbackLoader) = makeSUT()
         
-        expect(sut, url: anyURL(), toCompleteWith: .failure(anyNSError())) {
+        expect(sut, toCompleteWith: .failure(anyNSError())) {
             primaryLoader.complete(with: anyNSError())
             fallbackLoader.complete(with: anyNSError())
         }
@@ -113,29 +113,6 @@ extension FeedImageDataLoaderWithFallbackCompositeTests {
     private func waitForImageLoad(_ sut: FeedImageDataLoader, url: URL, when action: () -> Void) {
         let exp = expectation(description: "Wait for image data load")
         _ = sut.loadImageData(from: url) { result in
-            exp.fulfill()
-        }
-        
-        action()
-        
-        wait(for: [exp], timeout: 1.0)
-    }
-    
-    private func expect(_ sut: FeedImageDataLoader, url: URL, toCompleteWith expectedResult: FeedImageDataLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
-        let exp = expectation(description: "Wait for load completion")
-        
-        _ = sut.loadImageData(from: url) { recievedResult in
-            switch (recievedResult, expectedResult) {
-            case let (.success(recievedFeed), .success(expectedFeed)):
-                XCTAssertEqual(recievedFeed, expectedFeed, file: file, line: line)
-                
-            case (.failure, .failure):
-                break
-                
-            default:
-                XCTFail("Expected \(expectedResult), got \(recievedResult) instead", file: file, line: line)
-            }
-            
             exp.fulfill()
         }
         
