@@ -168,6 +168,9 @@ extension LoadFromRemoteUseCaseTests {
     /// We only want the spy to capture values, then we can test them after.
     /// Capturing the values is more simple.
     class HTTPClientSpy: HTTPClient {
+        private struct Task: HTTPClientTask {
+            func cancel() { }
+        }
         private var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
         
         var requestedURLs: [URL] {
@@ -176,8 +179,9 @@ extension LoadFromRemoteUseCaseTests {
         
         // ...get appends to the messages with a closure that
         // is waiting to be completed...
-        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
+        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
             messages.append((url, completion))
+            return Task()
         }
         
         // ...complete methods will complete the response by calling
