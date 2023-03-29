@@ -17,14 +17,17 @@ class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
         self.fallback = fallback
     }
     
-    class Task: FeedImageDataLoaderTask {
+    private class TaskWrapper: FeedImageDataLoaderTask {
+        var wrapped: FeedImageDataLoaderTask?
+        
         func cancel() {
-            
+            wrapped?.cancel()
         }
     }
     
     func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-        _ = primary.loadImageData(from: url) { [weak self] result in
+        let task = TaskWrapper()
+        task.wrapped = primary.loadImageData(from: url) { [weak self] result in
             switch result {
             case .success:
                 completion(result)
@@ -34,7 +37,7 @@ class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
                 }
             }
         }
-        return Task()
+        return task
     }
     
 }
@@ -54,6 +57,17 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         let (sut, _, _) = makeSUT(primaryResult: .success(primaryData), fallbackResult: .success(fallbackData))
         
         expect(sut, url: anyURL(), toCompleteWith: .success(primaryData))
+    }
+    
+    func test_loadImageData_cancelsPrimaryLoaderTask() {
+        let url = anyURL()
+        let (sut, primaryLoader, fallbackLoader) = makeSUT()
+        
+        let task = sut.loadImageData(from: url) { _ in }
+        task.cancel()
+        
+        XCTAssertEqual(primaryLoader.cancelledURLs, [url])
+        XCTAssertEqual(fallbackLoader.cancelledURLs, [])
     }
     
     func test_loadImageData_deliversFallbackImageOnPrimaryFailure() {
@@ -98,7 +112,7 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
 
 extension FeedImageDataLoaderWithFallbackCompositeTests {
     
-    private func makeSUT(primaryResult: FeedImageDataLoader.Result, fallbackResult: FeedImageDataLoader.Result, file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageDataLoader, primary: LoaderSpy, fallback: LoaderSpy) {
+    private func makeSUT(primaryResult: FeedImageDataLoader.Result = .success(Data()), fallbackResult: FeedImageDataLoader.Result = .success(Data()), file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageDataLoader, primary: LoaderSpy, fallback: LoaderSpy) {
         let primaryLoader = LoaderSpy(result: primaryResult)
         let fallbackLoader = LoaderSpy(result: fallbackResult)
         let sut = FeedImageDataLoaderWithFallbackComposite(primary: primaryLoader, fallback: fallbackLoader)
@@ -145,15 +159,21 @@ extension FeedImageDataLoaderWithFallbackCompositeTests {
         }
         
         private(set) var requestedURLs = [URL]()
+        private(set) var cancelledURLs = [URL]()
         
         private struct StubTask: FeedImageDataLoaderTask {
-            func cancel() {}
+            let callback: () -> Void
+            func cancel() {
+                callback()
+            }
         }
         
         func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
             requestedURLs.append(url)
             completion(result)
-            return StubTask()
+            return StubTask { [weak self] in
+                self?.cancelledURLs.append(url)
+            }
         }
     }
     
