@@ -10,9 +10,11 @@ import EssentialFeed
 
 class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
     private let primary: FeedImageDataLoader
+    private let fallback: FeedImageDataLoader
 
     init(primary: FeedImageDataLoader, fallback: FeedImageDataLoader) {
         self.primary = primary
+        self.fallback = fallback
     }
     
     class Task: FeedImageDataLoaderTask {
@@ -22,8 +24,15 @@ class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
     }
     
     func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-        _ = primary.loadImageData(from: url) { result in
-            completion(result)
+        _ = primary.loadImageData(from: url) { [weak self] result in
+            switch result {
+            case .success:
+                completion(result)
+            case .failure:
+                _ = self?.fallback.loadImageData(from: url) { result in
+                    completion(result)
+                }
+            }
         }
         return Task()
     }
@@ -42,6 +51,26 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
             switch result {
             case .success(let data):
                 XCTAssertEqual(data, primaryData)
+                
+            case .failure:
+                XCTFail("Expected successful data load")
+            }
+        
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_load_deliversFallbackImageOnPrimaryFailure() {
+        let fallbackData = uniqueImageData()
+        let sut = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .success(fallbackData))
+        
+        let exp = expectation(description: "Wait for image data load")
+        _ = sut.loadImageData(from: anyURL()) { result in
+            switch result {
+            case .success(let data):
+                XCTAssertEqual(data, fallbackData)
                 
             case .failure:
                 XCTFail("Expected successful data load")
