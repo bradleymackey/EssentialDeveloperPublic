@@ -41,6 +41,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
     func test_save_requestsNewCacheInsertionWithTimestampOnSuccessfulDeletion() {
         let timestamp = Date()
         let items = [uniqueItem(), uniqueItem()]
+        let localItems = items.map { LocalFeedItem(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.imageURL) }
         let (sut, store) = makeSUT(currentDate: { timestamp })
         
         sut.save(items) { _ in }
@@ -48,7 +49,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
         
         XCTAssertEqual(
             store.recievedMessages,
-            [.deleteCachedFeed, .insert(items: items, timestamp: timestamp)]
+            [.deleteCachedFeed, .insert(items: localItems, timestamp: timestamp)]
         )
     }
     
@@ -143,7 +144,7 @@ extension CacheFeedUseCaseTests {
         
         enum RecievedMessage: Equatable {
             case deleteCachedFeed
-            case insert(items: [FeedItem], timestamp: Date)
+            case insert(items: [LocalFeedItem], timestamp: Date)
         }
         
         /// Storing a list of messages allows us to test order that the operations were performed.
@@ -164,7 +165,7 @@ extension CacheFeedUseCaseTests {
             deletionCompletions[index](nil)
         }
         
-        func insert(_ items: [FeedItem], at date: Date, completion: @escaping InsertionCompletion) {
+        func insert(_ items: [LocalFeedItem], at date: Date, completion: @escaping InsertionCompletion) {
             insertionCompletions.append(completion)
             recievedMessages.append(.insert(items: items, timestamp: date))
         }
