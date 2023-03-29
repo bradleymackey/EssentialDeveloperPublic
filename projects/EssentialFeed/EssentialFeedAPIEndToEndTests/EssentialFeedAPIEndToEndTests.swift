@@ -49,13 +49,18 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
     
     private func getFeedResult(file: StaticString = #filePath, line: UInt = #line) -> FeedLoader.Result? {
         // an ephemeral session will ensure there is no sharing of cache state.
-        let loader = RemoteLoader(url: feedTestServerURL, client: ephemeralClient(), mapper: FeedItemsMapper.map)
-        trackForMemoryLeaks(loader, file: file, line: line)
+        let client = ephemeralClient()
         
         let exp = expectation(description: "Wait for load completion")
         var recivedResult: FeedLoader.Result?
-        loader.load { result in
-            recivedResult = result
+        client.get(from: feedTestServerURL) { result in
+            recivedResult = result.flatMap { (data, response) in
+                do {
+                    return .success(try FeedItemsMapper.map(data, from: response))
+                } catch {
+                    return .failure(error)
+                }
+            }
             exp.fulfill()
         }
         
