@@ -8,20 +8,24 @@
 import XCTest
 import EssentialFeed
 
+@MainActor
 class URLSessionHTTPClientTests: XCTestCase {
     
+    @MainActor
     override func setUp() {
         super.setUp()
         
         URLProtocolStub.startInterceptingRequests()
     }
     
+    @MainActor
     override func tearDown() {
         super.tearDown()
         
         URLProtocolStub.stopInterceptingRequests()
     }
     
+    @MainActor
     func test_getFromURL_performsGETRequestWithURL() {
         let url = anyURL()
         let exp = expectation(description: "Wait for request")
@@ -53,6 +57,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertEqual(recieved?.code, requestError.code)
     }
     
+    @MainActor
     func test_getFromURL_failsOnAllInvalidRepresentationCases() {
         XCTAssertNotNil(resultErrorFor((data: nil, response: nil, error: nil)))
         XCTAssertNotNil(resultErrorFor((data: nil, response: nonHTTPURLResponse(), error: nil)))
@@ -95,6 +100,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         return sut
     }
     
+    @MainActor
     private func resultValuesFor(_ values: (data: Data?, response: URLResponse?, error: Error?), file: StaticString = #file, line: UInt = #line) -> (data: Data, response: HTTPURLResponse)? {
         let result = resultFor(values, file: file, line: line)
         
@@ -107,6 +113,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         }
     }
     
+    @MainActor
     private func resultErrorFor(_ values: (data: Data?, response: URLResponse?, error: Error?)? = nil, taskHandler: (HTTPClientTask) -> Void = { _ in }, file: StaticString = #file, line: UInt = #line) -> Error? {
         let result = resultFor(values, taskHandler: taskHandler, file: file, line: line)
         
@@ -119,6 +126,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         }
     }
     
+    @MainActor
     private func resultFor(_ values: (data: Data?, response: URLResponse?, error: Error?)?, taskHandler: (HTTPClientTask) -> Void = { _ in },  file: StaticString = #file, line: UInt = #line) -> HTTPClient.Result {
         values.map { URLProtocolStub.stub(data: $0, response: $1, error: $2) }
         
@@ -147,7 +155,9 @@ class URLSessionHTTPClientTests: XCTestCase {
         return URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
     }
     
+    @MainActor
     private class URLProtocolStub: URLProtocol {
+        @MainActor
         private static var stub: Stub?
         private static var requestObserver: ((URLRequest) -> Void)?
         
@@ -155,14 +165,15 @@ class URLSessionHTTPClientTests: XCTestCase {
             let data: Data?
             let response: URLResponse?
             let error: Error?
+            let requestObserver: ((URLRequest) -> Void)?
         }
         
         static func stub(data: Data?, response: URLResponse?, error: Error?) {
-            stub = Stub(data: data, response: response, error: error)
+            stub = Stub(data: data, response: response, error: error, requestObserver: nil)
         }
         
         static func observeRequests(observer: @escaping (URLRequest) -> Void) {
-            requestObserver = observer
+            stub = Stub(data: nil, response: nil, error: nil, requestObserver: observer)
         }
         
         static func startInterceptingRequests() {
@@ -204,6 +215,8 @@ class URLSessionHTTPClientTests: XCTestCase {
             } else {
                 client?.urlProtocolDidFinishLoading(self)
             }
+            
+            stub.requestObserver?(request)
         }
         
         override func stopLoading() {}
