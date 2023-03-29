@@ -57,8 +57,8 @@ class RemoteFeedLoaderTests: XCTestCase {
         // ACT
         // (client and completions belongs to the 'act')
         // (part of the tests)
-        var capturedErrors = [RemoteFeedLoader.Error]()
-        sut.load(completion: { capturedErrors.append($0) })
+        var capturedResults = [RemoteFeedLoader.Result]()
+        sut.load(completion: { capturedResults.append($0) })
         
         // Complete after the load starts, making this code easy to
         // read (load starts, then the HTTPClient completes after that)
@@ -70,7 +70,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         client.complete(with: clientError)
         
         // ASSERT
-        XCTAssertEqual(capturedErrors, [.connectivity])
+        XCTAssertEqual(capturedResults, [.failure(.connectivity)])
     }
     
     func test_load_deliversErrorOnNon200Response() {
@@ -153,12 +153,12 @@ extension RemoteFeedLoaderTests {
     }
     
     private func expect(_ sut: RemoteFeedLoader, toCompleteWithError error: RemoteFeedLoader.Error, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
-        var capturedErrors = [RemoteFeedLoader.Error]()
-        sut.load { capturedErrors.append($0) }
+        var capturedResults = [RemoteFeedLoader.Result]()
+        sut.load { capturedResults.append($0) }
         
         action()
         
-        XCTAssertEqual(capturedErrors, [error], file: file, line: line)
+        XCTAssertEqual(capturedResults, [.failure(error)], file: file, line: line)
     }
     
 }
