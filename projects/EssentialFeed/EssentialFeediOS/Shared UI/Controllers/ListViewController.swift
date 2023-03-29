@@ -86,6 +86,10 @@ public final class ListViewController: UITableViewController, ResourceLoadingVie
     private func cellController(forRowAt indexPath: IndexPath) -> CellController? {
         dataSource.itemIdentifier(for: indexPath)
     }
+    
+    public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        cellController(forRowAt: indexPath)?.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+    }
 }
 
 extension ListViewController: UITableViewDataSourcePrefetching {
