@@ -52,6 +52,15 @@ class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
         assertThatInsertOverridesPreviouslyInsertedCacheValues(on: sut)
     }
     
+    func test_insert_deliversErrorOnInsertionError() {
+        let stub = NSManagedObjectContext.alwaysFailingSaveStub()
+        stub.startIntercepting()
+        
+        let sut = makeSUT()
+        
+        assertThatInsertDeliversErrorOnInsertionError(on: sut)
+    }
+    
     func test_delete_deliversNoErrorOnEmptyCache() {
         let sut = makeSUT()
         

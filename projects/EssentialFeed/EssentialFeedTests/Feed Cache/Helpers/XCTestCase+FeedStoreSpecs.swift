@@ -62,6 +62,12 @@ extension FeedStoreSpecs where Self: XCTestCase {
 
          expect(sut, toRetrieve: .success(.init(feed: latestFeed, timestamp: latestTimestamp)), file: file, line: line)
      }
+    
+    func assertThatInsertDeliversErrorOnInsertionError(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+        let insertionError = insert((uniqueFeed().local, Date()), to: sut)
+        
+        XCTAssertNotNil(insertionError, "Expected cache insertion to fail with an error", file: file, line: line)
+    }
 
      func assertThatDeleteDeliversNoErrorOnEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
          let deletionError = deleteCache(from: sut)
