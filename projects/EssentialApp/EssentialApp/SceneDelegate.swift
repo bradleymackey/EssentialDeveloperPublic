@@ -37,8 +37,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     /// We cannot invoke this method to test, so we use it as a thunk to call
     /// the actual configuration logic!
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let scene = (scene as? UIWindowScene) else { return }
        
+        window = UIWindow(windowScene: scene)
+        window?.makeKeyAndVisible()
+        
         configureWindow()
     }
     
@@ -69,6 +72,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     )
                 )
         )
+        window?.makeKeyAndVisible()
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
