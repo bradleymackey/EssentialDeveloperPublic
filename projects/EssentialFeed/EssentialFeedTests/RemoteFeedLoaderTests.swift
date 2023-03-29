@@ -12,16 +12,6 @@ import XCTest
 
 class RemoteFeedLoaderTests: XCTestCase {
     
-    /// Move the test logic to a test type - the client spy.
-    /// this mimicks the behaviour of the parent without having to actually make
-    /// a network request.
-    class HTTPClientSpy: HTTPClient {
-        var requestedURLs = [URL]()
-        
-        func get(from url: URL) {
-            requestedURLs.append(url)
-        }
-    }
     
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -57,5 +47,44 @@ class RemoteFeedLoaderTests: XCTestCase {
         
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
+    
+    func test_load_deliversErrorOnClientError() {
+        // ARRANGE
+        let url = URL(string: "https://someurl.com")!
+        let client = HTTPClientSpy()
+        let sut = RemoteFeedLoader(url: url, client: client)
+        
+        // ACT
+        // (client and completions belongs to the 'act')
+        // (part of the tests)
+        var capturedErrors = [RemoteFeedLoader.Error]()
+        sut.load(completion: { capturedErrors.append($0) })
+        let clientError = NSError(domain: "Test", code: 0)
+        client.completions[0](clientError)
+        
+        // ASSERT
+        XCTAssertEqual(capturedErrors, [.connectivity])
+    }
 
+}
+
+
+// MARK: - Helpers
+
+extension RemoteFeedLoaderTests {
+    
+    /// Move the test logic to a test type - the client spy.
+    /// this mimicks the behaviour of the parent without having to actually make
+    /// a network request.
+    class HTTPClientSpy: HTTPClient {
+        var requestedURLs = [URL]()
+        // we are not stubbing, this is not behaviour
+        var completions = [(Error) -> Void]()
+        
+        func get(from url: URL, completion: @escaping (Error) -> Void) {
+            completions.append(completion)
+            requestedURLs.append(url)
+        }
+    }
+    
 }
