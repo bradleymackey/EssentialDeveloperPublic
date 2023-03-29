@@ -16,7 +16,7 @@ class FeedSnapshotTests: XCTestCase {
         
         sut.display(emptyFeed())
         
-        record(snapshot: sut.snapshot(), named: "EMPTY_FEED")
+        assert(snapshot: sut.snapshot(), named: "EMPTY_FEED")
     }
     
     func test_feedWithContent() throws {
@@ -24,7 +24,7 @@ class FeedSnapshotTests: XCTestCase {
         
         sut.display(feedWithContent())
         
-        record(snapshot: sut.snapshot(), named: "FEED_WITH_CONTENT")
+        assert(snapshot: sut.snapshot(), named: "FEED_WITH_CONTENT")
     }
     
     func test_feedWithErrorMessage() throws {
@@ -32,7 +32,7 @@ class FeedSnapshotTests: XCTestCase {
         
         sut.display(.error(message: "An error message...\n...with another line!"))
         
-        record(snapshot: sut.snapshot(), named: "FEED_WITH_ERROR_MESSAGE")
+        assert(snapshot: sut.snapshot(), named: "FEED_WITH_ERROR_MESSAGE")
     }
     
     func test_feedWithFailedImageLoading() throws {
@@ -40,7 +40,7 @@ class FeedSnapshotTests: XCTestCase {
         
         sut.display(feedWithFailedImageLoading())
         
-        record(snapshot: sut.snapshot(), named: "FEED_WITH_FAILED_IMAGE_LOADING")
+        assert(snapshot: sut.snapshot(), named: "FEED_WITH_FAILED_IMAGE_LOADING")
     }
 }
 
@@ -76,26 +76,54 @@ extension FeedSnapshotTests {
         ]
     }
     
-    private func record(snapshot: UIImage, named name: String, file: StaticString = #file, line: UInt = #line) {
-        guard let snapshotData = snapshot.pngData() else {
-            XCTFail("Failed to generate PNG snapshot", file: file, line: line)
+    private func assert(snapshot: UIImage, named name: String, file: StaticString = #file, line: UInt = #line) {
+        let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
+        let snapshotURL = makeSnapshotURL(named: name, file: file)
+        
+        guard let storedSnapshotData = try? Data(contentsOf: snapshotURL) else {
+            XCTFail("Failed to load stored snapshot. Use record before asserting.", file: file, line: line)
             return
         }
         
-        let snapshotURL = URL(filePath: String(describing: file))
-            .deletingLastPathComponent()
-            .appending(path: "snapshots")
-            .appending(path: "\(name).png")
+        if snapshotData != storedSnapshotData {
+            let temporarySnapshotURL = URL(filePath: NSTemporaryDirectory(), directoryHint: .isDirectory)
+                .appending(path: snapshotURL.lastPathComponent)
+            
+            try? snapshotData?.write(to: temporarySnapshotURL)
+            
+            XCTFail("New snapshot does not match stored snapshot. New snapshot: \(temporarySnapshotURL), stored: \(snapshotURL)", file: file, line: line)
+        }
+    }
+    
+    private func record(snapshot: UIImage, named name: String, file: StaticString = #file, line: UInt = #line) {
+        let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
+        let snapshotURL = makeSnapshotURL(named: name, file: file)
         
         do {
             try FileManager.default.createDirectory(
                 at: snapshotURL.deletingLastPathComponent(),
                 withIntermediateDirectories: true
             )
-            try snapshotData.write(to: snapshotURL)
+            try snapshotData?.write(to: snapshotURL)
         } catch {
             XCTFail("Failed to record snapshot: \(error)", file: file, line: line)
         }
+    }
+    
+    private func makeSnapshotURL(named name: String, file: StaticString) -> URL {
+        URL(filePath: String(describing: file))
+            .deletingLastPathComponent()
+            .appending(path: "snapshots")
+            .appending(path: "\(name).png")
+    }
+    
+    private func makeSnapshotData(for snapshot: UIImage, file: StaticString, line: UInt) -> Data? {
+        guard let data = snapshot.pngData() else {
+            XCTFail("Failed to generate PNG snapshot", file: file, line: line)
+            return nil
+        }
+        
+        return data
     }
 }
 
