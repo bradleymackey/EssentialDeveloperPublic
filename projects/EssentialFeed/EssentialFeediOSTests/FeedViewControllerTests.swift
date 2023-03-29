@@ -122,10 +122,11 @@ final class FeedViewControllerTests: XCTestCase {
         
         XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no image URL cancellations until views become non-visible")
         
-        
+        sut.simulateFeedImageViewVisible(at: 0)
         sut.simulateFeedImageViewNotVisible(at: 0)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url], "Expected first image URL request to cancel when not visible")
         
+        sut.simulateFeedImageViewVisible(at: 1)
         sut.simulateFeedImageViewNotVisible(at: 1)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected second image URL request to cancel when not visible")
     }
@@ -203,15 +204,21 @@ extension FeedViewControllerTests {
         
         // MARK: - FeedImageDataLoader
         
+        private struct TaskSpy: FeedImageDataLoaderTask {
+            let cancelCallback: () -> Void
+            func cancel() {
+                cancelCallback()
+            }
+        }
+        
         private(set) var loadedImageURLs = [URL]()
         private(set) var cancelledImageURLs = [URL]()
         
-        func loadImageData(from url: URL) {
+        func loadImageData(from url: URL) -> FeedImageDataLoaderTask {
             loadedImageURLs.append(url)
-        }
-        
-        func cancelImageDataLoad(from url: URL) {
-            cancelledImageURLs.append(url)
+            return TaskSpy { [weak self] in
+                self?.cancelledImageURLs.append(url)
+            }
         }
     }
     
