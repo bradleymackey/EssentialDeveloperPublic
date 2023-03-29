@@ -224,6 +224,20 @@ extension FeedViewControllerTests {
         XCTAssertEqual(view1.isShowingRetryAction, true, "Expected retry action or second view once second image loading completes with error")
     }
     
+    func test_feedImageViewRetryButton_isVisibleOnInvalidImageData() {
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [makeImage()])
+        
+        let view = sut.simulateFeedImageViewVisible(at: 0)
+        XCTAssertEqual(view.isShowingRetryAction, false, "Expected no retry action while loading image")
+        
+        let invalidImageData = Data("invalid!!!!11".utf8)
+        loader.completeImageLoading(with: invalidImageData)
+        XCTAssertEqual(view.isShowingRetryAction, true, "Expected retry action once image loading completes with invalid image data")
+    }
+    
 }
 
 // MARK: - Helpers
