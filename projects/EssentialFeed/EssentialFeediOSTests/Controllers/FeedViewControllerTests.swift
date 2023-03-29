@@ -12,6 +12,14 @@ import EssentialFeediOS
 
 final class FeedViewControllerTests: XCTestCase {
     
+    func test_feedView_hasTitle() {
+        let (sut, _) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        
+        XCTAssertEqual(sut.title, "My Feed")
+    }
+    
     // Don't mix context in tests.
     // First test: load feed actions.
     // Second test: loading feed indicator.
