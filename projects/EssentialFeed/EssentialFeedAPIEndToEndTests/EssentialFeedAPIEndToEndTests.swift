@@ -47,12 +47,12 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func getFeedResult(file: StaticString = #filePath, line: UInt = #line) -> FeedLoader.Result? {
+    private func getFeedResult(file: StaticString = #filePath, line: UInt = #line) -> Swift.Result<[FeedImage], Error>? {
         // an ephemeral session will ensure there is no sharing of cache state.
         let client = ephemeralClient()
         
         let exp = expectation(description: "Wait for load completion")
-        var recivedResult: FeedLoader.Result?
+        var recivedResult: Swift.Result<[FeedImage], Error>?
         client.get(from: feedTestServerURL) { result in
             recivedResult = result.flatMap { (data, response) in
                 do {

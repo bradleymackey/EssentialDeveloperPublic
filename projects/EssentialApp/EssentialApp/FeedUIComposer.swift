@@ -9,6 +9,7 @@ import Foundation
 import EssentialFeed
 import EssentialFeediOS
 import UIKit
+import Combine
 
 // It's up to the compositon layer to:
 //  - Organise, compose, and inject the instances correctly.
@@ -20,7 +21,7 @@ import UIKit
 /// Because some of `FeedViewController`'s dependencies are internal, we need to use this helper to create the
 /// dependencies, then pass them to FeedViewController.
 public enum FeedUIComposer {
-    public static func feedComposedWith(feedLoader: @escaping () -> FeedLoader.Publisher, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) -> FeedViewController {
+    public static func feedComposedWith(feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) -> FeedViewController {
         let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: { feedLoader().dispatchOnMainQueue() })
         
         let feedController = FeedViewController.makeWith(delegate: presentationAdapter, title: FeedPresenter.title)

@@ -11,7 +11,7 @@ import EssentialFeed
 import EssentialFeediOS
 
 final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
-    private let feedLoader: () -> FeedLoader.Publisher
+    private let feedLoader: () -> AnyPublisher<[FeedImage], Error>
     private var cancellable: AnyCancellable?
     /// This is only optional to break a circular dependency.
     /// It's fine though, because this is at the composition layer.
@@ -20,7 +20,7 @@ final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
     /// (Constructor injection should be preferred whereever possible though!)
     var presenter: FeedPresenter?
     
-    init(feedLoader: @escaping () -> FeedLoader.Publisher) {
+    init(feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>) {
         self.feedLoader = feedLoader
     }
     
