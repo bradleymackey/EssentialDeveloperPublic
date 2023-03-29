@@ -15,20 +15,36 @@ class LocalFeedLoader {
     }
     
     func save(_ items: [FeedItem]) {
-        store.deleteCachedFeed()
+        store.deleteCachedFeed { [unowned self] error in
+            if error == nil {
+                self.store.insert(items)
+            }
+        }
     }
 }
 
 class FeedStore {
+    typealias DeletionCompletion = (Error?) -> Void
     var deleteCachedFeedCallCount = 0
     var insertCallCount = 0
     
-    func deleteCachedFeed() {
+    private var deletionCompletions = [DeletionCompletion]()
+    
+    func deleteCachedFeed(completion: @escaping DeletionCompletion) {
         deleteCachedFeedCallCount += 1
+        deletionCompletions.append(completion)
     }
     
     func completeDeletion(with error: Error, at index: Int = 0) {
-        
+        deletionCompletions[index](error)
+    }
+    
+    func completeDeletionSuccessfully(at index: Int = 0) {
+        deletionCompletions[index](nil)
+    }
+    
+    func insert(_ items: [FeedItem]) {
+        insertCallCount += 1
     }
 }
 
@@ -60,6 +76,16 @@ final class CacheFeedUseCaseTests: XCTestCase {
         // it's important not only to have tests that a method WAS called when it was supposed to,
         // but also to have tests to ensure that a method WAS NOT called when it was not supposed to.
         XCTAssertEqual(store.insertCallCount, 0)
+    }
+    
+    func test_save_requestsNewCacheInsertionOnSuccessfulDeletion() {
+        let items = [uniqueItem(), uniqueItem()]
+        let (sut, store) = makeSUT()
+        
+        sut.save(items)
+        store.completeDeletionSuccessfully()
+        
+        XCTAssertEqual(store.insertCallCount, 1)
     }
     
 }
