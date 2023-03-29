@@ -4,3 +4,6 @@
 [submodule "ios-lead-essentials-ui-design-patterns-challenge"]
 	path = ios-lead-essentials-ui-design-patterns-challenge
 	url = https://github.com/bradleymackey/ios-lead-essentials-ui-design-patterns-challenge
+[submodule "ios-lead-essentials-feed-store-challenge"]
+	path = ios-lead-essentials-feed-store-challenge
+	url = https://github.com/bradleymackey/ios-lead-essentials-feed-store-challenge
