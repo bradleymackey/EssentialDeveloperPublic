@@ -369,6 +369,7 @@
 			isa = PBXGroup;
 			children = (
 				1C2F616C28A0144100791C95 /* EssentialFeediOS.h */,
+				1CDF66F129CF9C8A0070A6A0 /* Shared UI */,
 				1CB948C7299EE1C900518302 /* Feed UI */,
 				1C2F615328A013B300791C95 /* EssentialFeediOS.docc */,
 			);
@@ -389,10 +390,7 @@
 			isa = PBXGroup;
 			children = (
 				1CFA924C28E84D9A00EF6F78 /* UIView+Shimmering.swift */,
-				1CAA8B0229A2803B005732B7 /* UITableView+Dequeue.swift */,
 				1CAA8B0429A280D6005732B7 /* UIImageView+Animation.swift */,
-				1C4CDB2929AF6BDF00963CDD /* UIRefreshControl+Helpers.swift */,
-				1C77181129C1E1DA00151856 /* UITableView+HeaderSizing.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -480,7 +478,6 @@
 		1CB948BC299EDFD800518302 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				1C2F617228A0485200791C95 /* ListViewController.swift */,
 				1CB948CD299EE8EB00518302 /* FeedImageCellController.swift */,
 			);
 			path = Controllers;
@@ -491,7 +488,6 @@
 			children = (
 				1C4CDB2829AF6BBE00963CDD /* Helpers */,
 				1CFA924A28E83EDF00EF6F78 /* FeedImageCell.swift */,
-				1C4CDB2429AF6A6200963CDD /* ErrorView.swift */,
 				1CAA8AFE29A277D3005732B7 /* Feed.storyboard */,
 				1CAA8B0029A27821005732B7 /* Feed.xcassets */,
 			);
@@ -717,6 +713,42 @@
 				1CDF66E829CF9A170070A6A0 /* EMPTY_FEED_dark.png */,
 			);
 			path = snapshots;
+			sourceTree = "<group>";
+		};
+		1CDF66F129CF9C8A0070A6A0 /* Shared UI */ = {
+			isa = PBXGroup;
+			children = (
+				1CDF66F229CF9C9E0070A6A0 /* Helpers */,
+				1CDF66F329CF9CCD0070A6A0 /* Controllers */,
+				1CDF66F429CF9CD50070A6A0 /* Views */,
+			);
+			path = "Shared UI";
+			sourceTree = "<group>";
+		};
+		1CDF66F229CF9C9E0070A6A0 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				1CAA8B0229A2803B005732B7 /* UITableView+Dequeue.swift */,
+				1C4CDB2929AF6BDF00963CDD /* UIRefreshControl+Helpers.swift */,
+				1C77181129C1E1DA00151856 /* UITableView+HeaderSizing.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		1CDF66F329CF9CCD0070A6A0 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1C2F617228A0485200791C95 /* ListViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		1CDF66F429CF9CD50070A6A0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1C4CDB2429AF6A6200963CDD /* ErrorView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		1CE712952822EC700065176B /* Helpers */ = {
