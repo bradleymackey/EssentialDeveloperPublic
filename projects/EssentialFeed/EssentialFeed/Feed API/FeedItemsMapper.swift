@@ -48,14 +48,14 @@ internal final class FeedItemsMapper {
         // Another component would handle the authentication so that this component could
         // then fetch valid data from a 200 response.
         guard response.statusCode == 200 else {
-            return .failure(.invalidData)
+            return .failure(RemoteFeedLoader.Error.invalidData)
         }
         
         do {
             let root = try JSONDecoder().decode(Root.self, from: data)
             return .success(root.feed)
         } catch {
-            return .failure(.invalidData)
+            return .failure(RemoteFeedLoader.Error.invalidData)
         }
     }
 }

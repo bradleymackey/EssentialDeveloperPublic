@@ -44,6 +44,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
     
+    // This error is not refactored to show the process of the design.
     func test_load_deliversErrorOnClientError() {
         // ARRANGE
         let (sut, client) = makeSUT()
@@ -64,7 +65,10 @@ class RemoteFeedLoaderTests: XCTestCase {
         client.complete(with: clientError)
         
         // ASSERT
-        XCTAssertEqual(capturedResults, [.failure(.connectivity)])
+        XCTAssertEqual(capturedResults.count, 1)
+        XCTAssertThrowsError(try capturedResults[0].get(), "Error state") { error in
+            XCTAssertEqual(error as! RemoteFeedLoader.Error, .connectivity)
+        }
     }
     
     func test_load_deliversErrorOnNon200Response() {
@@ -75,7 +79,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let samples = [199, 201, 300, 400, 500]
         
         samples.enumerated().forEach { index, code in
-            expect(sut, toCompleteWith: .failure(.invalidData)) {
+            expect(sut, toCompleteWith: failure(.invalidData)) {
                 let json = makeItemsJSON([])
                 client.complete(withStatusCode: code, data: json, at: index)
             }
@@ -87,7 +91,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let (sut, client) = makeSUT()
         
         // ACT, ASSERT
-        expect(sut, toCompleteWith: .failure(.invalidData)) {
+        expect(sut, toCompleteWith: failure(.invalidData)) {
             let invalidJSON = Data("invalid json".utf8)
             client.complete(withStatusCode: 200, data: invalidJSON)
         }
@@ -203,6 +207,10 @@ extension RemoteFeedLoaderTests {
         return (sut, client)
     }
     
+    private func failure(_ error: RemoteFeedLoader.Error) -> LoadFeedResult {
+        .failure(error)
+    }
+    
     private func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
         addTeardownBlock { [weak instance] in
             XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
@@ -230,13 +238,25 @@ extension RemoteFeedLoaderTests {
         return try! JSONSerialization.data(withJSONObject: itemsJSON)
     }
     
-    private func expect(_ sut: RemoteFeedLoader, toCompleteWith result: RemoteFeedLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
-        var capturedResults = [RemoteFeedLoader.Result]()
-        sut.load { capturedResults.append($0) }
+    private func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: LoadFeedResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        
+        let exp = expectation(description: "Wait for load to complete")
+        sut.load { recievedResult in
+            switch (recievedResult, expectedResult) {
+            case let (.success(recievedItems), .success(expectedItems)):
+                XCTAssertEqual(recievedItems, expectedItems, file: file, line: line)
+            case let (.failure(recievedError as RemoteFeedLoader.Error), .failure(expectedError as RemoteFeedLoader.Error)):
+                XCTAssertEqual(recievedError, expectedError, file: file, line: line)
+            default:
+                XCTFail("Expected result \(expectedResult) got \(recievedResult) instead", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        }
         
         action()
         
-        XCTAssertEqual(capturedResults, [result], file: file, line: line)
+        wait(for: [exp], timeout: 1.0)
     }
     
 }
