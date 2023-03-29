@@ -27,14 +27,21 @@ class LocalFeedLoader {
 
 class FeedStore {
     typealias DeletionCompletion = (Error?) -> Void
-    var insertions = [(items: [FeedItem], date: Date)]()
     private var deletionCompletions = [DeletionCompletion]()
-    var deleteCachedFeedCallCount: Int {
-        deletionCompletions.count
+    
+    enum RecievedMessage: Equatable {
+        case deleteCachedFeed
+        case insert(items: [FeedItem], timestamp: Date)
     }
+    
+    /// Storing a list of messages allows us to test order that the operations were performed.
+    /// This is impossible to do with two sepearate properties, as we cannot tell the order that
+    /// they were called in.
+    private(set) var recievedMessages = [RecievedMessage]()
     
     func deleteCachedFeed(completion: @escaping DeletionCompletion) {
         deletionCompletions.append(completion)
+        recievedMessages.append(.deleteCachedFeed)
     }
     
     func completeDeletion(with error: Error, at index: Int = 0) {
@@ -46,16 +53,16 @@ class FeedStore {
     }
     
     func insert(_ items: [FeedItem], at date: Date) {
-        insertions.append((items, date))
+        recievedMessages.append(.insert(items: items, timestamp: date))
     }
 }
 
 final class CacheFeedUseCaseTests: XCTestCase {
     
-    func test_init_doesNotDeleteCacheUponCreation() {
+    func test_init_doesNotMessageStoreUponCreation() {
         let (_, store) = makeSUT()
         
-        XCTAssertEqual(store.deleteCachedFeedCallCount, 0)
+        XCTAssertEqual(store.recievedMessages, [])
     }
     
     func test_save_requestsCacheDeletion() {
@@ -64,7 +71,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
         
         sut.save(items)
         
-        XCTAssertEqual(store.deleteCachedFeedCallCount, 1)
+        XCTAssertEqual(store.recievedMessages, [.deleteCachedFeed])
     }
     
     func test_save_doesNotRequestCacheInsertionOnDeletionError() {
@@ -77,7 +84,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
         
         // it's important not only to have tests that a method WAS called when it was supposed to,
         // but also to have tests to ensure that a method WAS NOT called when it was not supposed to.
-        XCTAssertEqual(store.insertions.count, 0)
+        XCTAssertEqual(store.recievedMessages, [.deleteCachedFeed])
     }
     
     func test_save_requestsNewCacheInsertionWithTimestampOnSuccessfulDeletion() {
@@ -88,9 +95,10 @@ final class CacheFeedUseCaseTests: XCTestCase {
         sut.save(items)
         store.completeDeletionSuccessfully()
         
-        XCTAssertEqual(store.insertions.count, 1)
-        XCTAssertEqual(store.insertions.first?.items, items)
-        XCTAssertEqual(store.insertions.first?.date, timestamp)
+        XCTAssertEqual(
+            store.recievedMessages,
+            [.deleteCachedFeed, .insert(items: items, timestamp: timestamp)]
+        )
     }
     
 }
