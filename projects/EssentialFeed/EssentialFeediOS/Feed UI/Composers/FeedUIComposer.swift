@@ -19,7 +19,7 @@ public enum FeedUIComposer {
         viewModel.onFeedLoad = { [weak feedController] feed in
             // Adapter pattern to adapt [FeedImage] -> [FeedImageCellController]
             feedController?.tableModel = feed.map { model in
-                FeedImageCellController(model: model, imageLoader: imageLoader)
+                FeedImageCellController(viewModel: FeedImageViewModel(model: model, imageLoader: imageLoader))
             }
         }
         return feedController
