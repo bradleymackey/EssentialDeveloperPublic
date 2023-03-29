@@ -32,9 +32,7 @@ class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
             case .success:
                 completion(result)
             case .failure:
-                _ = self?.fallback.loadImageData(from: url) { result in
-                    completion(result)
-                }
+                task.wrapped = self?.fallback.loadImageData(from: url, completion: completion)
             }
         }
         return task
@@ -75,6 +73,18 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         let (sut, _, _) = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .success(fallbackData))
         
         expect(sut, url: anyURL(), toCompleteWith: .success(fallbackData))
+    }
+    
+    func test_loadImageData_cancelsFallbackLoaderTaskWhenUsingFallbackLoader() {
+        let url = anyURL()
+        let (sut, primaryLoader, fallbackLoader) = makeSUT()
+        
+        let task = sut.loadImageData(from: url) { _ in }
+        primaryLoader.complete(with: anyNSError())
+        task.cancel()
+        
+        XCTAssertEqual(primaryLoader.cancelledURLs, [])
+        XCTAssertEqual(fallbackLoader.cancelledURLs, [url])
     }
     
     func test_loadImageData_primarySuccessRequestsDesiredURLFromPrimary() {
@@ -158,8 +168,12 @@ extension FeedImageDataLoaderWithFallbackCompositeTests {
             self.result = result
         }
         
-        private(set) var requestedURLs = [URL]()
+        private(set) var messages = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
         private(set) var cancelledURLs = [URL]()
+        
+        var requestedURLs: [URL] {
+            messages.map(\.url)
+        }
         
         private struct StubTask: FeedImageDataLoaderTask {
             let callback: () -> Void
@@ -169,11 +183,15 @@ extension FeedImageDataLoaderWithFallbackCompositeTests {
         }
         
         func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-            requestedURLs.append(url)
+            messages.append((url, completion))
             completion(result)
             return StubTask { [weak self] in
                 self?.cancelledURLs.append(url)
             }
+        }
+        
+        func complete(with error: Error, at index: Int = 0) {
+            messages[index].completion(.failure(error))
         }
     }
     
