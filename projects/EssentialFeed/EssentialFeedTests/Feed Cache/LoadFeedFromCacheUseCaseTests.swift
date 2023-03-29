@@ -75,6 +75,17 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         })
     }
     
+    func test_load_deletesCacheOnRetrievalError() {
+        let (sut, store) = makeSUT()
+        let exp = expectation(description: "Wait for load")
+        
+        sut.load { _ in exp.fulfill() }
+        store.completeRetrieval(with: anyNSError())
+        
+        wait(for: [exp], timeout: 1.0)
+        XCTAssertEqual(store.recievedMessages, [.retrieve, .deleteCachedFeed])
+    }
+    
 }
 
 // MARK: - Helpers
