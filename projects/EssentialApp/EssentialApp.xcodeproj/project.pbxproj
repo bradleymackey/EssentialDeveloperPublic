@@ -25,6 +25,7 @@
 		1CF0B25429B5F91A00996609 /* FeedImageDataLoaderWithFallbackCompositeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CF0B25329B5F91A00996609 /* FeedImageDataLoaderWithFallbackCompositeTests.swift */; };
 		1CF0B25729B609E000996609 /* XCTestCase+MemoryLeaks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CF0B25629B609E000996609 /* XCTestCase+MemoryLeaks.swift */; };
 		1CF0B25929B60A1B00996609 /* SharedHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CF0B25829B60A1B00996609 /* SharedHelpers.swift */; };
+		1CF0B25B29B6153C00996609 /* FeedImageDataLoaderWithFallbackComposite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CF0B25A29B6153C00996609 /* FeedImageDataLoaderWithFallbackComposite.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +81,7 @@
 		1CF0B25329B5F91A00996609 /* FeedImageDataLoaderWithFallbackCompositeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderWithFallbackCompositeTests.swift; sourceTree = "<group>"; };
 		1CF0B25629B609E000996609 /* XCTestCase+MemoryLeaks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeaks.swift"; sourceTree = "<group>"; };
 		1CF0B25829B60A1B00996609 /* SharedHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedHelpers.swift; sourceTree = "<group>"; };
+		1CF0B25A29B6153C00996609 /* FeedImageDataLoaderWithFallbackComposite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderWithFallbackComposite.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +139,7 @@
 				1C7E670C29B5E6690089F3C9 /* SceneDelegate.swift */,
 				1C7E670E29B5E6690089F3C9 /* ViewController.swift */,
 				1CF0B24F29B5F6A200996609 /* FeedLoaderWithFallbackComposite.swift */,
+				1CF0B25A29B6153C00996609 /* FeedImageDataLoaderWithFallbackComposite.swift */,
 				1C7E671029B5E6690089F3C9 /* Main.storyboard */,
 				1C7E671329B5E66A0089F3C9 /* Assets.xcassets */,
 				1C7E671529B5E66A0089F3C9 /* LaunchScreen.storyboard */,
@@ -319,6 +322,7 @@
 				1C7E670B29B5E6690089F3C9 /* AppDelegate.swift in Sources */,
 				1CF0B25029B5F6A200996609 /* FeedLoaderWithFallbackComposite.swift in Sources */,
 				1C7E670D29B5E6690089F3C9 /* SceneDelegate.swift in Sources */,
+				1CF0B25B29B6153C00996609 /* FeedImageDataLoaderWithFallbackComposite.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
