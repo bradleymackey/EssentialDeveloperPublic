@@ -31,9 +31,10 @@ public final class RemoteFeedLoader {
         client.get(from: url) { result in
             switch result {
             case let .success(data, response):
-                if response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data) {
-                    completion(.success(root.items.map(\.item)))
-                } else {
+                do {
+                    let items = try FeedItemsMapper.map(data, response)
+                    completion(.success(items))
+                } catch {
                     completion(.failure(.invalidData))
                 }
             case .failure:
@@ -43,26 +44,37 @@ public final class RemoteFeedLoader {
     }
 }
 
-private struct Root: Decodable {
-    var items: [Item]
+private class FeedItemsMapper {
+    private struct Root: Decodable {
+        var items: [Item]
+    }
+    
+    // We create a 'clone' of the FeedItem, that just handles the decoding for the RemoteFeedLoader.
+    // This is because we don't want to tie the generic model 'FeedItem' to specific coding keys, which are context dependent on where the FeedItem is actually coming from.
+    private struct Item: Decodable {
+        let id: UUID
+        let description: String?
+        let location: String?
+        let imageURL: URL
+        
+        var item: FeedItem {
+            FeedItem(id: id, description: description, location: location, imageURL: imageURL)
+        }
+        
+        private enum CodingKeys: String, CodingKey {
+            case id
+            case description
+            case location
+            case imageURL = "image"
+        }
+    }
+    
+    static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [FeedItem] {
+        guard response.statusCode == 200 else {
+            throw RemoteFeedLoader.Error.invalidData
+        }
+        let root = try JSONDecoder().decode(Root.self, from: data)
+        return root.items.map(\.item)
+    }
 }
 
-// We create a 'clone' of the FeedItem, that just handles the decoding for the RemoteFeedLoader.
-// This is because we don't want to tie the generic model 'FeedItem' to specific coding keys, which are context dependent on where the FeedItem is actually coming from.
-private struct Item: Decodable {
-    let id: UUID
-    let description: String?
-    let location: String?
-    let imageURL: URL
-    
-    var item: FeedItem {
-        FeedItem(id: id, description: description, location: location, imageURL: imageURL)
-    }
-    
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case description
-        case location
-        case imageURL = "image"
-    }
-}
