@@ -43,7 +43,7 @@ public final class RemoteImageCommentsLoader {
             let items = try ImageCommentsMapper.map(data, from: response)
             return .success(items)
         } catch {
-            return .failure(error)
+            return .failure(Error.invalidData)
         }
     }
 }
