@@ -10,8 +10,8 @@ jobs:
   build-and-test:
     runs-on: macos-11
     defaults:
-    run:
-      working-directory: ./projects/EssentialFeed
+      run:
+        working-directory: ./projects/EssentialFeed
 
     timeout-minutes: 15
 
