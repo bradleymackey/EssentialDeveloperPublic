@@ -34,6 +34,14 @@ class FeedSnapshotTests: XCTestCase {
         
         record(snapshot: sut.snapshot(), named: "FEED_WITH_ERROR_MESSAGE")
     }
+    
+    func test_feedWithFailedImageLoading() throws {
+        let sut = try makeSUT()
+        
+        sut.display(feedWithFailedImageLoading())
+        
+        record(snapshot: sut.snapshot(), named: "FEED_WITH_FAILED_IMAGE_LOADING")
+    }
 }
 
 // MARK: - Helpers
@@ -57,6 +65,14 @@ extension FeedSnapshotTests {
             ImageStub(description: "Testing 123", location: "Test\nTest2", image: UIImage.make(withColor: .red)),
             ImageStub(description: "Testing 456", location: "Test2\nTest3", image: UIImage.make(withColor: .blue)),
             ImageStub(description: "Testing 789", location: "Test7\nTest6", image: UIImage.make(withColor: .green)),
+        ]
+    }
+    
+    private func feedWithFailedImageLoading() -> [ImageStub] {
+        return [
+            ImageStub(description: nil, location: "Test\nTest2", image: nil),
+            ImageStub(description: nil, location: "Test2\nTest3", image: nil),
+            ImageStub(description: nil, location: "Test7\nTest6", image: nil),
         ]
     }
     
