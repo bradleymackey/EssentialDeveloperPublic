@@ -23,7 +23,7 @@ internal final class ImageCommentsMapper {
         // If, for example, there was a 401 repsonse this component would simply reject the response (rather than handling reauthentication).
         // Another component would handle the authentication so that this component could
         // then fetch valid data from a 200 response.
-        guard response.isOK else {
+        guard isOK(response) else {
             throw RemoteImageCommentsLoader.Error.invalidData
         }
         
@@ -33,5 +33,9 @@ internal final class ImageCommentsMapper {
         } catch {
             throw RemoteImageCommentsLoader.Error.invalidData
         }
+    }
+    
+    private static func isOK(_ response: HTTPURLResponse) -> Bool {
+        (200 ..< 300).contains(response.statusCode)
     }
 }
