@@ -27,6 +27,10 @@ public final class FeedItemsMapper {
         }
     }
     
+    public enum Error: Swift.Error {
+        case invalidData
+    }
+    
     public static func map(_ data: Data, from response: HTTPURLResponse) throws -> [FeedImage] {
         // We are decoding AND checking the status code here.
         // However, this is not a violation of the single responsibility principle because
@@ -39,14 +43,14 @@ public final class FeedItemsMapper {
         // Another component would handle the authentication so that this component could
         // then fetch valid data from a 200 response.
         guard response.isOK else {
-            throw RemoteFeedLoader.Error.invalidData
+            throw Error.invalidData
         }
         
         do {
             let root = try JSONDecoder().decode(Root.self, from: data)
             return root.images
         } catch {
-            throw RemoteFeedLoader.Error.invalidData
+            throw Error.invalidData
         }
     }
 }
