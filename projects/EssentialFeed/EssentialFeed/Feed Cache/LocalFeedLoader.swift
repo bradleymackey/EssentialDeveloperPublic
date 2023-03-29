@@ -18,21 +18,6 @@ import Foundation
 //
 // We don't want to test the framework, we just want to test the business logic!
 
-/// Policy is deterministic and has no side effect.
-private final class FeedCachePolicy {
-    private init() {}
-    private static let calendar = Calendar(identifier: .gregorian)
-    
-    private static let maxCacheAgeInDays = 7
-    
-    static func validate(_ timestamp: Date, against date: Date) -> Bool {
-        guard let maxAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
-            return false
-        }
-        return date < maxAge
-    }
-}
-
 public final class LocalFeedLoader {
     private let store: FeedStore
     private let currentDate: () -> Date
@@ -41,7 +26,6 @@ public final class LocalFeedLoader {
         self.store = store
         self.currentDate = currentDate
     }
-    
 }
 
 extension LocalFeedLoader {
