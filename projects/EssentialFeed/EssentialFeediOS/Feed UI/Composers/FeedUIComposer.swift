@@ -7,6 +7,7 @@
 
 import Foundation
 import EssentialFeed
+import UIKit
 
 /// This is public, because this is how other modules should create a `FeedViewController`.
 /// Because some of `FeedViewController`'s dependencies are internal, we need to use this helper to create the
@@ -19,7 +20,7 @@ public enum FeedUIComposer {
         viewModel.onFeedLoad = { [weak feedController] feed in
             // Adapter pattern to adapt [FeedImage] -> [FeedImageCellController]
             feedController?.tableModel = feed.map { model in
-                FeedImageCellController(viewModel: FeedImageViewModel(model: model, imageLoader: imageLoader))
+                FeedImageCellController(viewModel: FeedImageViewModel(model: model, imageLoader: imageLoader, imageTransformer: UIImage.init))
             }
         }
         return feedController
