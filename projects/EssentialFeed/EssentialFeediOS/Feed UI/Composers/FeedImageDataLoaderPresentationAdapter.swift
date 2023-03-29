@@ -21,7 +21,7 @@ final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: 
     }
     
     func didCreatePlaceholder() {
-        presenter?.didInitiallyCreate(model: model)
+        presenter?.didStartLoadingImageData(for: model)
     }
     
     func didRequestImage() {
