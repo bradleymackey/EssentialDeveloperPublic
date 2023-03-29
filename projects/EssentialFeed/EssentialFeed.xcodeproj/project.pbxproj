@@ -60,6 +60,7 @@
 		1CE712972822EC790065176B /* FeedStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE712962822EC790065176B /* FeedStoreSpy.swift */; };
 		1CFA924528E83DCE00EF6F78 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CBE7CEA280594230096676E /* EssentialFeed.framework */; };
 		1CFA924628E83DCE00EF6F78 /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1CBE7CEA280594230096676E /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1CFA924B28E83EDF00EF6F78 /* FeedImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CFA924A28E83EDF00EF6F78 /* FeedImageCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -164,6 +165,7 @@
 		1CCC42CB281D958F00F77ACA /* LocalFeedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedImage.swift; sourceTree = "<group>"; };
 		1CE712932822EBE80065176B /* LoadFeedFromCacheUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadFeedFromCacheUseCaseTests.swift; sourceTree = "<group>"; };
 		1CE712962822EC790065176B /* FeedStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStoreSpy.swift; sourceTree = "<group>"; };
+		1CFA924A28E83EDF00EF6F78 /* FeedImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -250,6 +252,7 @@
 			children = (
 				1C2F616C28A0144100791C95 /* EssentialFeediOS.h */,
 				1C2F617228A0485200791C95 /* FeedViewController.swift */,
+				1CFA924A28E83EDF00EF6F78 /* FeedImageCell.swift */,
 				1C2F615328A013B300791C95 /* EssentialFeediOS.docc */,
 			);
 			path = EssentialFeediOS;
@@ -657,6 +660,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C2F617328A0485200791C95 /* FeedViewController.swift in Sources */,
+				1CFA924B28E83EDF00EF6F78 /* FeedImageCell.swift in Sources */,
 				1C2F615428A013B300791C95 /* EssentialFeediOS.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
