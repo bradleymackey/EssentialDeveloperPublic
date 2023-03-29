@@ -8,18 +8,11 @@
 import UIKit
 
 public final class FeedViewController: UITableViewController {
-    private var refreshController: FeedRefreshViewController?
+    var refreshController: FeedRefreshViewController?
     var tableModel = [FeedImageCellController]() {
         didSet { tableView.reloadData() }
     }
-    
-    // We can use a convenience init since we don't need any custom initialization.
-    // This way, we don't need to implement the view controller's required initializers!
-    convenience init(refreshController: FeedRefreshViewController) {
-        self.init()
-        self.refreshController = refreshController
-    }
-    
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         
