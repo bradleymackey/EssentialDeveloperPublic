@@ -20,6 +20,10 @@ func anyData() -> Data {
     Data("any".utf8)
 }
 
+func uniqueImageData() -> Data {
+    Data(UUID().uuidString.utf8)
+}
+
 func uniqueFeed() -> [FeedImage] {
     [FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())]
 }

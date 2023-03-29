@@ -100,9 +100,9 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
 
 extension FeedImageDataLoaderWithFallbackCompositeTests {
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageDataLoader, primary: LoaderSpy, fallback: LoaderSpy) {
-        let primaryLoader = LoaderSpy()
-        let fallbackLoader = LoaderSpy()
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageDataLoader, primary: FeedImageDataLoaderSpy, fallback: FeedImageDataLoaderSpy) {
+        let primaryLoader = FeedImageDataLoaderSpy()
+        let fallbackLoader = FeedImageDataLoaderSpy()
         let sut = FeedImageDataLoaderWithFallbackComposite(primary: primaryLoader, fallback: fallbackLoader)
         trackForMemoryLeaks(primaryLoader, file: file, line: line)
         trackForMemoryLeaks(fallbackLoader, file: file, line: line)
@@ -142,46 +142,5 @@ extension FeedImageDataLoaderWithFallbackCompositeTests {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    private class LoaderSpy: FeedImageDataLoader {
-        init() {}
-        
-        private(set) var messages = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
-        private(set) var cancelledURLs = [URL]()
-        
-        var requestedURLs: [URL] {
-            messages.map(\.url)
-        }
-        
-        private struct StubTask: FeedImageDataLoaderTask {
-            let callback: () -> Void
-            func cancel() {
-                callback()
-            }
-        }
-        
-        func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-            messages.append((url, completion))
-            return StubTask { [weak self] in
-                self?.cancelledURLs.append(url)
-            }
-        }
-        
-        func complete(with data: Data, at index: Int = 0) {
-            messages[index].completion(.success(data))
-        }
-        
-        func complete(with error: Error, at index: Int = 0) {
-            messages[index].completion(.failure(error))
-        }
-    }
-    
-    private func uniqueImageData() -> Data {
-        Data(UUID().uuidString.utf8)
-    }
-    
-    private func anyData() -> Data {
-        Data("any".utf8)
     }
 }
