@@ -9,6 +9,7 @@ import XCTest
 import EssentialFeed
 import EssentialApp
 
+@available(*, deprecated, message: "These tests are not needed when using combine universal abstractions")
 class FeedLoaderWithFallbackCompositeTests: XCTestCase, FeedLoaderTestCase {
     
     func test_load_deliversPrimaryFeedOnPrimaryLoaderSuccess() {

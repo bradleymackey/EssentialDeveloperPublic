@@ -8,6 +8,7 @@
 import Foundation
 import EssentialFeed
 
+@available(*, deprecated, message: "Use Combine for a universal abstraction")
 public final class FeedLoaderCacheDecorator: FeedLoader {
     private let decoratee: any FeedLoader
     private let cache: any FeedCache
@@ -27,7 +28,7 @@ public final class FeedLoaderCacheDecorator: FeedLoader {
     }
 }
 
-private extension FeedCache {
+extension FeedCache {
     func saveIgnoringResult(_ feed: [FeedImage]) {
         save(feed) { _ in }
     }

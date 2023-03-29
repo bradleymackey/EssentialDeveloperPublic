@@ -5,12 +5,14 @@
 //  Created by Bradley Mackey on 21/02/2023.
 //
 
+import Combine
 import Foundation
 import EssentialFeed
 import EssentialFeediOS
 
 final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
-    private let feedLoader: FeedLoader
+    private let feedLoader: () -> FeedLoader.Publisher
+    private var cancellable: AnyCancellable?
     /// This is only optional to break a circular dependency.
     /// It's fine though, because this is at the composition layer.
     /// We're not leaking this composition detail into the adapters.
@@ -18,19 +20,21 @@ final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
     /// (Constructor injection should be preferred whereever possible though!)
     var presenter: FeedPresenter?
     
-    init(feedLoader: FeedLoader) {
+    init(feedLoader: @escaping () -> FeedLoader.Publisher) {
         self.feedLoader = feedLoader
     }
     
     func didRequestFeedRefresh() {
         presenter?.didStartLoadingFeed()
-        feedLoader.load { [weak self] result in
-            switch result {
-            case .success(let feed):
-                self?.presenter?.didFinishLoadingFeed(with: feed)
+        cancellable = feedLoader().sink { [weak self] completion in
+            switch completion {
+            case .finished:
+                break
             case .failure(let error):
                 self?.presenter?.didFinishLoadingFeed(with: error)
             }
+        } receiveValue: { [weak self] feed in
+            self?.presenter?.didFinishLoadingFeed(with: feed)
         }
     }
 }

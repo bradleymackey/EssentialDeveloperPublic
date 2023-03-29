@@ -25,6 +25,7 @@ final class MainQueueDispatchDecorator<T> {
     }
 }
 
+@available(*, deprecated, message: "Use Combine for a universal abstraction")
 extension MainQueueDispatchDecorator: FeedLoader where T == FeedLoader {
     func load(completion: @escaping (FeedLoader.Result) -> Void) {
         decoratee.load { [weak self] result in

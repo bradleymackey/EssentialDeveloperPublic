@@ -7,6 +7,7 @@
 
 import EssentialFeed
 
+@available(*, deprecated, message: "Use Combine for a universal abstraction")
 public final class FeedLoaderWithFallbackComposite: FeedLoader {
     private let primary: FeedLoader
     private let fallback: FeedLoader
