@@ -1,3 +1,6 @@
 [submodule "ios-lead-essentials-image-comments-challenge"]
 	path = ios-lead-essentials-image-comments-challenge
 	url = https://github.com/bradleymackey/ios-lead-essentials-image-comments-challenge
+[submodule "ios-lead-essentials-ui-design-patterns-challenge"]
+	path = ios-lead-essentials-ui-design-patterns-challenge
+	url = https://github.com/bradleymackey/ios-lead-essentials-ui-design-patterns-challenge
