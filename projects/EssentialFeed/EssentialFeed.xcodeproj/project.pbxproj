@@ -13,6 +13,7 @@
 		1CBE7D052805943E0096676E /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBE7D042805943E0096676E /* FeedItem.swift */; };
 		1CBE7D07280594710096676E /* FeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBE7D06280594710096676E /* FeedLoader.swift */; };
 		1CBE7D0928059B820096676E /* RemoteFeedLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBE7D0828059B820096676E /* RemoteFeedLoaderTests.swift */; };
+		1CBE7D0B2805A6D30096676E /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBE7D0A2805A6D30096676E /* HTTPClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +34,7 @@
 		1CBE7D042805943E0096676E /* FeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
 		1CBE7D06280594710096676E /* FeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoader.swift; sourceTree = "<group>"; };
 		1CBE7D0828059B820096676E /* RemoteFeedLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoaderTests.swift; sourceTree = "<group>"; };
+		1CBE7D0A2805A6D30096676E /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 				1CBE7CED280594230096676E /* EssentialFeed.h */,
 				1CBE7D042805943E0096676E /* FeedItem.swift */,
 				1CBE7D06280594710096676E /* FeedLoader.swift */,
+				1CBE7D0A2805A6D30096676E /* HTTPClient.swift */,
 				1CBE7CEE280594230096676E /* EssentialFeed.docc */,
 			);
 			path = EssentialFeed;
@@ -202,6 +205,7 @@
 			files = (
 				1CBE7D07280594710096676E /* FeedLoader.swift in Sources */,
 				1CBE7D052805943E0096676E /* FeedItem.swift in Sources */,
+				1CBE7D0B2805A6D30096676E /* HTTPClient.swift in Sources */,
 				1CBE7CEF280594230096676E /* EssentialFeed.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

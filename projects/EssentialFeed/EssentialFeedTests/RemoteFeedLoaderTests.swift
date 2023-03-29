@@ -6,27 +6,9 @@
 //
 
 import XCTest
+@testable import EssentialFeed
 
 // We test drive the implementation before implementing anything concrete.
-
-class RemoteFeedLoader {
-    // Inject the HTTP client dependency to ensure there is not a strong coupling
-    let client: HTTPClient
-    let url: URL
-    init(url: URL, client: HTTPClient) {
-        self.url = url
-        self.client = client
-    }
-    func load() {
-        client.get(from: url)
-    }
-}
-
-// There's no reason that HTTPClient needs to be a singleton.
-// We can extend URLSession
-protocol HTTPClient {
-    func get(from url: URL)
-}
 
 /// Move the test logic to a test type - the client spy.
 /// this mimicks the behaviour of the parent without having to actually make
