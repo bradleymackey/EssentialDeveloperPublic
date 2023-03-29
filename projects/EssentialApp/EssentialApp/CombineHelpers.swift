@@ -76,12 +76,15 @@ extension Publisher {
 
 extension DispatchQueue {
     static var immediateWhenOnMainQueueScheduler: some Scheduler {
-        ImmediateWhenOnMainQueueScheduler()
+        ImmediateWhenOnMainQueueScheduler.shared
     }
     
     private struct ImmediateWhenOnMainQueueScheduler: Scheduler {
         typealias SchedulerTimeType = DispatchQueue.SchedulerTimeType
         typealias SchedulerOptions = DispatchQueue.SchedulerOptions
+        
+        /// Singleton because we only actually want a single instance!
+        static let shared = Self()
         
         var now: DispatchQueue.SchedulerTimeType {
             DispatchQueue.main.now
@@ -91,8 +94,20 @@ extension DispatchQueue {
             DispatchQueue.main.minimumTolerance
         }
         
+        private static let key = DispatchSpecificKey<UInt8>()
+        private static let value = UInt8.max
+        
+        private init() {
+            DispatchQueue.main.setSpecific(key: Self.key, value: Self.value)
+        }
+        
+        private var isMainQueue: Bool {
+            // Thread.isMainThread is not good enough often, we want to be on the main queue as well.
+            DispatchQueue.getSpecific(key: Self.key) == Self.value
+        }
+        
         func schedule(options: DispatchQueue.SchedulerOptions?, _ action: @escaping () -> Void) {
-            guard Thread.isMainThread else {
+            guard isMainQueue else {
                 return DispatchQueue.main.schedule(options: options, action)
             }
             
