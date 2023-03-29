@@ -208,14 +208,14 @@ final class CodableFeedStoreTests: XCTestCase {
 
 extension CodableFeedStoreTests {
     
-    private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
+    private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> any FeedStore {
         let sut = CodableFeedStore(storeURL: storeURL ?? testStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
     
     @discardableResult
-    private func insert(_ cache: (feed: [LocalFeedImage], timestamp: Date), to sut: CodableFeedStore) -> Error? {
+    private func insert(_ cache: (feed: [LocalFeedImage], timestamp: Date), to sut: any FeedStore) -> Error? {
         let exp = expectation(description: "Wait for cache insertion")
         var retrievedError: Error?
         sut.insert(cache.feed, at: cache.timestamp) { insertionError in
@@ -226,7 +226,7 @@ extension CodableFeedStoreTests {
         return retrievedError
     }
     
-    private func deleteCache(from sut: CodableFeedStore) -> Error? {
+    private func deleteCache(from sut: any FeedStore) -> Error? {
         let exp = expectation(description: "Wait for cache deletion")
         var retrievedError: Error?
         sut.deleteCachedFeed { deletionError in
@@ -237,7 +237,7 @@ extension CodableFeedStoreTests {
         return retrievedError
     }
     
-    private func expect(_ sut: CodableFeedStore, toRetrieve expectedResult: RetrieveCachedFeedResult, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: any FeedStore, toRetrieve expectedResult: RetrieveCachedFeedResult, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Wait for cache retrieval")
         
         sut.retrieve { retrievedResult in
