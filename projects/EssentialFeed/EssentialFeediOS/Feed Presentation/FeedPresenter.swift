@@ -7,20 +7,8 @@
 
 import EssentialFeed
 
-/// - Note: this is a ViewModel used in MVP, so it should have no state.
-/// It is used to send state updates via the abstraction for the view, `FeedLoadingView`.
-/// It's also called "View Data", just basic data for display.
-struct FeedLoadingViewModel {
-    let isLoading: Bool
-}
-
 protocol FeedLoadingView {
     func display(_ viewModel: FeedLoadingViewModel)
-}
-
-/// Note: ViewModel used by MVP, so no state.
-struct FeedViewModel {
-    let feed: [FeedImage]
 }
 
 protocol FeedView {
