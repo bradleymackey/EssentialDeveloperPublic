@@ -21,8 +21,11 @@ import Combine
 /// Because some of `FeedViewController`'s dependencies are internal, we need to use this helper to create the
 /// dependencies, then pass them to FeedViewController.
 public enum FeedUIComposer {
+    
+    private typealias FeedPresentationAdapter = LoadResourcePresentationAdapter<[FeedImage], FeedViewAdapter>
+    
     public static func feedComposedWith(feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) -> FeedViewController {
-        let presentationAdapter = LoadResourcePresentationAdapter<_, FeedViewAdapter>(loader: { feedLoader().dispatchOnMainQueue() })
+        let presentationAdapter = FeedPresentationAdapter(loader: { feedLoader().dispatchOnMainQueue() })
         
         let feedController = FeedViewController.makeWith(delegate: presentationAdapter, title: FeedPresenter.title)
         
