@@ -55,13 +55,11 @@ extension FeedUIIntegrationTests {
         }
         
         func completeFeedLoadingWithError(at index: Int = 0) {
-            let error = NSError(domain: "an error", code: 0)
-            feedRequests[index].send(completion: .failure(error))
+            feedRequests[index].send(completion: .failure(anyNSError()))
         }
         
         func completeLoadMoreWithError(at index: Int = 0) {
-            let error = NSError(domain: "an error", code: 0)
-            loadMoreRequests[index].send(completion: .failure(error))
+            loadMoreRequests[index].send(completion: .failure(anyNSError()))
         }
         
         // MARK: - FeedImageDataLoader
@@ -91,8 +89,7 @@ extension FeedUIIntegrationTests {
         }
         
         func completeImageLoadingWithError(at index: Int = 0) {
-            let error = NSError(domain: "an error", code: 0)
-            imageRequests[index].completion(.failure(error))
+            imageRequests[index].completion(.failure(anyNSError()))
         }
     }
 }
