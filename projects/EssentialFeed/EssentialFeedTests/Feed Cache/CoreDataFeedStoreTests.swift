@@ -142,6 +142,24 @@ class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs, FailableFeedStoreSpecs
         expect(sut, toRetrieve: .success(.init(feed: feed, timestamp: timestamp)))
     }
     
+    func test_delete_removesAllObjects() throws {
+        let store = makeSUT()
+
+        insert((uniqueFeed().local, Date()), to: store)
+
+        deleteCache(from: store)
+
+        let context = try NSPersistentContainer.load(
+            name: CoreDataFeedStore.modelName,
+            model: XCTUnwrap(CoreDataFeedStore.model),
+            url: inMemoryStoreURL()
+        ).viewContext
+
+        let existingObjects = try context.allExistingObjects()
+
+        XCTAssertEqual(existingObjects, [], "found orphaned objects in Core Data")
+    }
+    
     func test_storeSideEffects_runSerially() {
         let sut = makeSUT()
         
@@ -156,10 +174,14 @@ extension CoreDataFeedStoreTests {
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> FeedStore {
         let storeBundle = Bundle(for: CoreDataFeedStore.self)
-        let storeURL = URL(fileURLWithPath: "/dev/null")
-        let sut = try! CoreDataFeedStore(storeURL: storeURL, bundle: storeBundle)
+        let sut = try! CoreDataFeedStore(storeURL: inMemoryStoreURL(), bundle: storeBundle)
         trackForMemoryLeaks(sut)
         return sut
+    }
+    
+    private func inMemoryStoreURL() -> URL {
+        URL(fileURLWithPath: "/dev/null")
+            .appendingPathComponent("\(type(of: self)).store")
     }
     
 }
