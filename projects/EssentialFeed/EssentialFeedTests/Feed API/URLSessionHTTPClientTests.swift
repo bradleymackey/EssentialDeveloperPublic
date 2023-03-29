@@ -44,9 +44,9 @@ class URLSessionHTTPClientTests: XCTestCase {
     
     func test_getFromURL_performsGetRequestWithURL() {
         let url = anyURL()
-        let exp = expectation(description: "Wait for request")
         let sut = makeSUT()
         
+        let exp = expectation(description: "Wait for request")
         URLProtocolStub.observeRequests { request in
             XCTAssertEqual(request.url, url)
             XCTAssertEqual(request.httpMethod, "GET")
@@ -59,7 +59,7 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     
     func test_getFromURL_failsOnRequestError() {
-        let expectedError = NSError(domain: "any error", code: 1)
+        let expectedError = anyNSError()
         let recievedError = resultErrorFor(data: nil, response: nil, error: expectedError) as NSError?
         
         XCTAssertEqual(recievedError?.domain, expectedError.domain)
