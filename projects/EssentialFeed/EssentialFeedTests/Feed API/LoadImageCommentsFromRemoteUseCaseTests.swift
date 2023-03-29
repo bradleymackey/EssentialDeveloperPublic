@@ -74,7 +74,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         
         invalidStatusCodes.enumerated().forEach { index, code in
             expect(sut, toCompleteWith: failure(.invalidData)) {
-                let json = makeFeedJSON([])
+                let json = makeCommentsJSON([])
                 client.complete(withStatusCode: code, data: json, at: index)
             }
         }
@@ -96,7 +96,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         
         validStatusCodes.enumerated().forEach { index, code in
             expect(sut, toCompleteWith: .success([])) {
-                let emptyListJSON = makeFeedJSON([])
+                let emptyListJSON = makeCommentsJSON([])
                 client.complete(withStatusCode: code, data: emptyListJSON, at: index)
             }
         }
@@ -105,23 +105,24 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
     func test_load_deliversItemsOn2xxHTTPResponseWithJSONItems() {
         let (sut, client) = makeSUT()
         
-        let item1 = makeFeedImage(
+        let item1 = makeItem(
             id: UUID(),
-            url: URL(string: "https://a-url.com")!
+            message: "a message",
+            createdAt: (Date(timeIntervalSince1970: 1598627222), "2020-08-28T15:07:02+00:00"),
+            username: "a username"
         )
-        let item2 = makeFeedImage(
+        let item2 = makeItem(
             id: UUID(),
-            description: "a description",
-            location: "a location",
-            url: URL(string: "https://a-url-2.com")!
+            message: "another message",
+            createdAt: (Date(timeIntervalSince1970: 1577881882), "2020-01-01T12:31:22+00:00"),
+            username: "another username"
         )
         
         let items = [item1, item2]
         
-        
         validStatusCodes.enumerated().forEach { index, code in
             expect(sut, toCompleteWith: .success(items.map(\.model))) {
-                let json = makeFeedJSON(items.map(\.json))
+                let json = makeCommentsJSON(items.map(\.json))
                 client.complete(withStatusCode: code, data: json, at: index)
             }
         }
@@ -138,7 +139,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         sut?.load { capturedResults.append($0) }
         
         sut = nil
-        client.complete(withStatusCode: 200, data: makeFeedJSON([]))
+        client.complete(withStatusCode: 200, data: makeCommentsJSON([]))
         
         XCTAssertTrue(capturedResults.isEmpty)
     }
@@ -160,32 +161,34 @@ extension LoadImageCommentsFromRemoteUseCaseTests {
         return (sut, client)
     }
     
-    private func failure(_ error: RemoteImageCommentsLoader.Error) -> FeedLoader.Result {
+    private func failure(_ error: RemoteImageCommentsLoader.Error) -> RemoteImageCommentsLoader.Result {
         .failure(error)
     }
     
-    private func makeFeedImage(id: UUID, description: String? = nil, location: String? = nil, url: URL) -> (model: FeedImage, json: [String: Any]) {
-        let item = FeedImage(
+    private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), username: String) -> (model: ImageComment, json: [String: Any]) {
+        let item = ImageComment(
             id: id,
-            description: description,
-            location: location,
-            url: url
+            message: message,
+            createdAt: createdAt.date,
+            username: username
         )
-        let itemJSON = [
-            "id": item.id.uuidString,
-            "image": item.url.absoluteString,
-            "description": item.description,
-            "location": item.location,
-        ].compactMapValues { $0 }
-        return (item, itemJSON)
+        let json: [String: Any] = [
+            "id": id.uuidString,
+            "message": message,
+            "created_at": createdAt.iso8601String,
+            "author": [
+                "username": username,
+            ],
+        ]
+        return (item, json)
     }
     
-    private func makeFeedJSON(_ items: [[String: Any]]) -> Data {
+    private func makeCommentsJSON(_ items: [[String: Any]]) -> Data {
         let itemsJSON = ["items": items]
         return try! JSONSerialization.data(withJSONObject: itemsJSON)
     }
     
-    private func expect(_ sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: FeedLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    private func expect(_ sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: RemoteImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         
         let exp = expectation(description: "Wait for load to complete")
         sut.load { recievedResult in
