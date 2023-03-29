@@ -71,11 +71,14 @@ class RemoteFeedLoaderTests: XCTestCase {
         let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(url: url, client: client)
         
-        var capturedErrors = [RemoteFeedLoader.Error]()
-        sut.load(completion: { capturedErrors.append($0) })
-        client.complete(withStatusCode: 400)
+        let samples = [199, 201, 300, 400, 500]
         
-        XCTAssertEqual(capturedErrors, [.invalidData])
+        samples.enumerated().forEach { index, code in
+            var capturedErrors = [RemoteFeedLoader.Error]()
+            sut.load(completion: { capturedErrors.append($0) })
+            client.complete(withStatusCode: code, at: index)
+            XCTAssertEqual(capturedErrors, [.invalidData])
+        }
     }
 
 }
@@ -89,18 +92,18 @@ extension RemoteFeedLoaderTests {
     /// this mimicks the behaviour of the parent without having to actually make
     /// a network request.
     class HTTPClientSpy: HTTPClient {
-        private var messages = [(url: URL, completion: (Error?, HTTPURLResponse?) -> Void)]()
+        private var messages = [(url: URL, completion: (HTTPClientResult) -> Void)]()
         
         var requestedURLs: [URL] {
             messages.map { $0.url }
         }
         
-        func get(from url: URL, completion: @escaping (Error?, HTTPURLResponse?) -> Void) {
+        func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void) {
             messages.append((url, completion))
         }
         
         func complete(with error: Error, at index: Int = 0) {
-            messages[index].completion(error, nil)
+            messages[index].completion(.failure(error))
         }
         
         func complete(withStatusCode statusCode: Int, at index: Int = 0) {
@@ -109,8 +112,8 @@ extension RemoteFeedLoaderTests {
                 statusCode: statusCode,
                 httpVersion: nil,
                 headerFields: nil
-            )
-            messages[index].completion(nil, response)
+            )!
+            messages[index].completion(.success(response))
         }
     }
     
