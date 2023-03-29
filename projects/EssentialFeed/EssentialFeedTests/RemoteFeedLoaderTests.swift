@@ -104,6 +104,12 @@ extension RemoteFeedLoaderTests {
     /// The `get` method will add a closure waiting to be completed.
     /// Then, some time later, you can `complete` the closure and the
     /// closure will be called with the provided update.
+    ///
+    /// We want to avoid 'stubbing' in this spy, to keep it's intent clear.
+    /// For example, adding an `error` optional property that would always return an error within `get` would be stubbing.
+    /// It also makes the flow of our program confusing because we would have to set the stubbed error before `get` is called, breaking the natural flow of our program and confusing us as developers.
+    /// We only want the spy to capture values, then we can test them after.
+    /// Capturing the values is more simple.
     class HTTPClientSpy: HTTPClient {
         private var messages = [(url: URL, completion: (HTTPClientResult) -> Void)]()
         
