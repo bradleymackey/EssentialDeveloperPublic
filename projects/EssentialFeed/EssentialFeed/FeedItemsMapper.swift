@@ -10,6 +10,10 @@ import Foundation
 internal final class FeedItemsMapper {
     private struct Root: Decodable {
         var items: [Item]
+        
+        var feed: [FeedItem] {
+            return items.map { $0.item }
+        }
     }
     
     // We create a 'clone' of the FeedItem, that just handles the decoding for the RemoteFeedLoader.
@@ -32,7 +36,7 @@ internal final class FeedItemsMapper {
         }
     }
     
-    internal static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [FeedItem] {
+    internal static func map(_ data: Data, from response: HTTPURLResponse) -> RemoteFeedLoader.Result {
         // We are decoding AND checking the status code here.
         // However, this is not a violation of the single responsibility principle because
         // this functionality is based on the API contract, which includes the status code.
@@ -44,10 +48,15 @@ internal final class FeedItemsMapper {
         // Another component would handle the authentication so that this component could
         // then fetch valid data from a 200 response.
         guard response.statusCode == 200 else {
-            throw RemoteFeedLoader.Error.invalidData
+            return .failure(.invalidData)
         }
-        let root = try JSONDecoder().decode(Root.self, from: data)
-        return root.items.map(\.item)
+        
+        do {
+            let root = try JSONDecoder().decode(Root.self, from: data)
+            return .success(root.feed)
+        } catch {
+            return .failure(.invalidData)
+        }
     }
 }
 
