@@ -28,7 +28,7 @@ public protocol FeedStore {
     typealias RetrievalCompletion = (RetrievalResult) -> Void
     
     func deleteCachedFeed() throws
-    func insert(_ feed: [LocalFeedImage], timestamp: Date) throws
+    func insert(_ feed: [LocalFeedImage], at date: Date) throws
     func retrieve() throws -> CachedFeed?
     
     /// The completion handler can be invoked in any thread.
@@ -60,11 +60,11 @@ public extension FeedStore {
         return try result.get()
     }
     
-    func insert(_ feed: [LocalFeedImage], timestamp: Date) throws {
+    func insert(_ feed: [LocalFeedImage], at date: Date) throws {
         let group = DispatchGroup()
         group.enter()
         var result: InsertionResult!
-        insert(feed, timestamp: timestamp) {
+        insert(feed, at: date) {
             result = $0
             group.leave()
         }
@@ -85,7 +85,7 @@ public extension FeedStore {
     }
     
     func deleteCachedFeed(completion: @escaping DeletionCompletion) {}
-    func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {}
+    func insert(_ feed: [LocalFeedImage], at date: Date, completion: @escaping InsertionCompletion) {}
     func retrieve(completion: @escaping RetrievalCompletion) {}
 }
 

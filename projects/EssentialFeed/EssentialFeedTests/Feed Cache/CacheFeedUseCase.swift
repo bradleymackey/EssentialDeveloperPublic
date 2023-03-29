@@ -17,22 +17,13 @@ final class CacheFeedUseCaseTests: XCTestCase {
         XCTAssertEqual(store.recievedMessages, [])
     }
     
-    func test_save_requestsCacheDeletion() {
-        let items = uniqueFeed()
-        let (sut, store) = makeSUT()
-        
-        sut.save(items.models) { _ in }
-        
-        XCTAssertEqual(store.recievedMessages, [.deleteCachedFeed])
-    }
-    
     func test_save_doesNotRequestCacheInsertionOnDeletionError() {
         let items = uniqueFeed()
         let (sut, store) = makeSUT()
         let deletionError = anyNSError()
+        store.completeDeletion(with: deletionError)
         
         sut.save(items.models) { _ in }
-        store.completeDeletion(with: deletionError)
         
         // it's important not only to have tests that a method WAS called when it was supposed to,
         // but also to have tests to ensure that a method WAS NOT called when it was not supposed to.
@@ -43,9 +34,9 @@ final class CacheFeedUseCaseTests: XCTestCase {
         let timestamp = Date()
         let items = uniqueFeed()
         let (sut, store) = makeSUT(currentDate: { timestamp })
+        store.completeDeletionSuccessfully()
         
         sut.save(items.models) { _ in }
-        store.completeDeletionSuccessfully()
         
         XCTAssertEqual(
             store.recievedMessages,
@@ -80,35 +71,6 @@ final class CacheFeedUseCaseTests: XCTestCase {
             store.completeInsertionSuccessfully()
         }
     }
-    
-    func test_save_doesNotDeliverDeletionErrorAfterSUTInstanceHasBeenDeallocated() {
-        let items = uniqueFeed()
-        let store = FeedStoreSpy()
-        var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
-        
-        var receivedResults = [LocalFeedLoader.SaveResult]()
-        sut?.save(items.models) { receivedResults.append($0) }
-        
-        sut = nil
-        store.completeDeletion(with: anyNSError())
-        
-        XCTAssert(receivedResults.isEmpty)
-    }
-    
-    func test_save_doesNotDeliverInsertionErrorAfterSUTInstanceHasBeenDeallocated() {
-        let items = uniqueFeed()
-        let store = FeedStoreSpy()
-        var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
-        
-        var receivedResults = [LocalFeedLoader.SaveResult]()
-        sut?.save(items.models) { receivedResults.append($0) }
-        
-        store.completeDeletionSuccessfully()
-        sut = nil
-        store.completeInsertion(with: anyNSError())
-        
-        XCTAssert(receivedResults.isEmpty)
-    }
 }
 
 // MARK: - Helpers
@@ -125,6 +87,7 @@ extension CacheFeedUseCaseTests {
     
     private func expect(_ sut: LocalFeedLoader, toCompleteWithError expectedError: NSError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for save completion")
+        action()
         
         var receivedError: Error?
         sut.save(uniqueFeed().models) { saveResult in
@@ -134,7 +97,6 @@ extension CacheFeedUseCaseTests {
             exp.fulfill()
         }
         
-        action()
         wait(for: [exp], timeout: 1.0)
         
         let nsError = receivedError as? NSError
