@@ -7,7 +7,7 @@
 
 import CoreData
 
-public final class CoreDataFeedStore: FeedStore {
+public final class CoreDataFeedStore {
     public static let modelName = "FeedStore"
     public static let model = NSManagedObjectModel.with(name: modelName, in: Bundle(for: CoreDataFeedStore.self))
     
@@ -19,52 +19,17 @@ public final class CoreDataFeedStore: FeedStore {
         context = container.newBackgroundContext()
     }
     
-    public func retrieve(completion: @escaping RetrievalCompletion) {
-        perform { context in
-            completion(Result {
-                try ManagedCache.find(in: context).map {
-                    CachedFeed(feed: $0.localFeed, timestamp: $0.timestamp)
-                }
-            })
-        }
-    }
-    
-    public func insert(_ feed: [LocalFeedImage], at timestamp: Date, completion: @escaping InsertionCompletion) {
-        perform { context in
-            completion(Result {
-                let managedCache = try ManagedCache.newUniqueInstance(in: context)
-                managedCache.timestamp = timestamp
-                managedCache.feed = ManagedFeedImage.images(from: feed, in: context)
-                
-                try context.save()
-            } afterFailure: {
-                context.rollback()
-            })
-        }
-    }
-    
-    public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-        perform { context in
-            completion(Result {
-                try ManagedCache.find(in: context).map(context.delete).map(context.save)
-            } afterFailure: {
-                context.rollback()
-            })
-        }
-    }
-    
     func perform(_ action: @escaping (NSManagedObjectContext) -> Void) {
         let context = self.context
         context.perform {
             action(context)
         }
     }
-    
 }
 
 extension Result where Failure == Error {
     /// An initializer that can perform cleanup after a failure.
-    fileprivate init(catching: () throws -> Success, afterFailure: () -> Void) {
+    init(catching: () throws -> Success, afterFailure: () -> Void) {
         do {
             let result = try catching()
             self = .success(result)
