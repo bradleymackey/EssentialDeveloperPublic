@@ -62,39 +62,6 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func test_load_primarySuccessRequestsDesiredURLFromPrimary() {
-        let primaryData = uniqueImageData()
-        let fallbackData = uniqueImageData()
-        let url = anyURL()
-        let (sut, primaryLoader, fallbackLoader) = makeSUT(primaryResult: .success(primaryData), fallbackResult: .success(fallbackData))
-        
-        let exp = expectation(description: "Wait for image data load")
-        _ = sut.loadImageData(from: url) { result in
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertEqual(primaryLoader.requestedURLs, [url])
-        XCTAssertEqual(fallbackLoader.requestedURLs, [])
-    }
-    
-    func test_load_fallbackRequestsDesiredURLFromPrimaryThenSecondary() {
-        let fallbackData = uniqueImageData()
-        let url = anyURL()
-        let (sut, primaryLoader, fallbackLoader) = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .success(fallbackData))
-        
-        let exp = expectation(description: "Wait for image data load")
-        _ = sut.loadImageData(from: url) { result in
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertEqual(primaryLoader.requestedURLs, [url])
-        XCTAssertEqual(fallbackLoader.requestedURLs, [url])
-    }
-    
     func test_load_deliversFallbackImageOnPrimaryFailure() {
         let fallbackData = uniqueImageData()
         let (sut, _, _) = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .success(fallbackData))
@@ -115,6 +82,29 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_load_primarySuccessRequestsDesiredURLFromPrimary() {
+        let primaryData = uniqueImageData()
+        let fallbackData = uniqueImageData()
+        let url = anyURL()
+        let (sut, primaryLoader, fallbackLoader) = makeSUT(primaryResult: .success(primaryData), fallbackResult: .success(fallbackData))
+        
+        waitForImageLoad(sut, url: url)
+        
+        XCTAssertEqual(primaryLoader.requestedURLs, [url])
+        XCTAssertEqual(fallbackLoader.requestedURLs, [])
+    }
+    
+    func test_load_fallbackRequestsDesiredURLFromPrimaryThenSecondary() {
+        let fallbackData = uniqueImageData()
+        let url = anyURL()
+        let (sut, primaryLoader, fallbackLoader) = makeSUT(primaryResult: .failure(anyNSError()), fallbackResult: .success(fallbackData))
+        
+        waitForImageLoad(sut, url: url)
+        
+        XCTAssertEqual(primaryLoader.requestedURLs, [url])
+        XCTAssertEqual(fallbackLoader.requestedURLs, [url])
+    }
+    
 }
 
 // MARK: - Helpers
@@ -129,6 +119,15 @@ extension FeedImageDataLoaderWithFallbackCompositeTests {
         trackForMemoryLeaks(fallbackLoader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, primaryLoader, fallbackLoader)
+    }
+    
+    private func waitForImageLoad(_ sut: FeedImageDataLoader, url: URL) {
+        let exp = expectation(description: "Wait for image data load")
+        _ = sut.loadImageData(from: url) { result in
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     private class LoaderSpy: FeedImageDataLoader {
