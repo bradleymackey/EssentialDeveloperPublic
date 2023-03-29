@@ -11,22 +11,6 @@ import Foundation
 // Therefore, we are only testing the public interface.
 // This allows us to refactor any internal structures without breaking any tests.
 
-// We create a 'clone' of the FeedItem, that just handles the decoding for the RemoteFeedLoader.
-// This is because we don't want to tie the generic model 'FeedItem' to specific coding keys, which are context dependent on where the FeedItem is actually coming from.
-internal struct RemoteFeedItem: Decodable {
-    internal let id: UUID
-    internal let description: String?
-    internal let location: String?
-    internal let imageURL: URL
-    
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case description
-        case location
-        case imageURL = "image"
-    }
-}
-
 internal final class FeedItemsMapper {
     private struct Root: Decodable {
         var items: [RemoteFeedItem]
