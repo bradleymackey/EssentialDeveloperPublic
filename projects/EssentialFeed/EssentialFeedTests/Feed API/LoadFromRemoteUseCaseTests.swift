@@ -207,7 +207,7 @@ extension LoadFromRemoteUseCaseTests {
         return (sut, client)
     }
     
-    private func failure(_ error: RemoteFeedLoader.Error) -> LoadFeedResult {
+    private func failure(_ error: RemoteFeedLoader.Error) -> FeedLoader.Result {
         .failure(error)
     }
     
@@ -232,7 +232,7 @@ extension LoadFromRemoteUseCaseTests {
         return try! JSONSerialization.data(withJSONObject: itemsJSON)
     }
     
-    private func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: LoadFeedResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    private func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: FeedLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         
         let exp = expectation(description: "Wait for load to complete")
         sut.load { recievedResult in
