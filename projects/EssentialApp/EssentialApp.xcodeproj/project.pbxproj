@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1C7BB77029B73E15004DE661 /* FeedLoaderCacheDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7BB76F29B73E15004DE661 /* FeedLoaderCacheDecoratorTests.swift */; };
 		1C7BB77229B73F25004DE661 /* FeedLoaderStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7BB77129B73F25004DE661 /* FeedLoaderStub.swift */; };
+		1C7BB77429B73FDF004DE661 /* XCTestCase+FeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7BB77329B73FDF004DE661 /* XCTestCase+FeedLoader.swift */; };
 		1C7E670B29B5E6690089F3C9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7E670A29B5E6690089F3C9 /* AppDelegate.swift */; };
 		1C7E670D29B5E6690089F3C9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7E670C29B5E6690089F3C9 /* SceneDelegate.swift */; };
 		1C7E670F29B5E6690089F3C9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7E670E29B5E6690089F3C9 /* ViewController.swift */; };
@@ -65,6 +66,7 @@
 /* Begin PBXFileReference section */
 		1C7BB76F29B73E15004DE661 /* FeedLoaderCacheDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderCacheDecoratorTests.swift; sourceTree = "<group>"; };
 		1C7BB77129B73F25004DE661 /* FeedLoaderStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderStub.swift; sourceTree = "<group>"; };
+		1C7BB77329B73FDF004DE661 /* XCTestCase+FeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FeedLoader.swift"; sourceTree = "<group>"; };
 		1C7E670729B5E6690089F3C9 /* EssentialApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EssentialApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C7E670A29B5E6690089F3C9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1C7E670C29B5E6690089F3C9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				1CF0B25629B609E000996609 /* XCTestCase+MemoryLeaks.swift */,
+				1C7BB77329B73FDF004DE661 /* XCTestCase+FeedLoader.swift */,
 				1CF0B25829B60A1B00996609 /* SharedHelpers.swift */,
 				1C7BB77129B73F25004DE661 /* FeedLoaderStub.swift */,
 			);
@@ -339,6 +342,7 @@
 				1CF0B24E29B5EFE700996609 /* FeedLoaderWithFallbackCompositeTests.swift in Sources */,
 				1C7BB77229B73F25004DE661 /* FeedLoaderStub.swift in Sources */,
 				1C7E672229B5E66A0089F3C9 /* EssentialAppTests.swift in Sources */,
+				1C7BB77429B73FDF004DE661 /* XCTestCase+FeedLoader.swift in Sources */,
 				1CF0B25929B60A1B00996609 /* SharedHelpers.swift in Sources */,
 				1CF0B25729B609E000996609 /* XCTestCase+MemoryLeaks.swift in Sources */,
 				1CF0B25429B5F91A00996609 /* FeedImageDataLoaderWithFallbackCompositeTests.swift in Sources */,
