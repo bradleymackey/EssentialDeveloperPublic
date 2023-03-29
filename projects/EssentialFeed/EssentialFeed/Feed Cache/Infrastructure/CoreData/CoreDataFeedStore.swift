@@ -34,6 +34,8 @@ public final class CoreDataFeedStore: FeedStore {
                 managedCache.feed = ManagedFeedImage.images(from: feed, in: context)
                 
                 try context.save()
+            } afterFailure: {
+                context.rollback()
             })
         }
     }
@@ -53,4 +55,17 @@ public final class CoreDataFeedStore: FeedStore {
         }
     }
     
+}
+
+extension Result where Failure == Error {
+    /// An initializer that can perform cleanup after a failure.
+    fileprivate init(catching: () throws -> Success, afterFailure: () -> Void) {
+        do {
+            let result = try catching()
+            self = .success(result)
+        } catch {
+            afterFailure()
+            self = .failure(error)
+        }
+    }
 }
